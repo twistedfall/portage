@@ -1,0 +1,15 @@
+--- a/src/third_party/libcurl.fb-changes.diff	2012-07-19 12:23:22.000000000 +0300
++++ b/src/third_party/libcurl.fb-changes.diff	2012-07-19 12:28:56.880388049 +0300
+@@ -32,10 +32,11 @@
+ diff -u -r1.210 multi.c
+ --- curl-old/lib/multi.c	28 Jan 2010 15:34:18 -0000	1.210
+ +++ curl-new/lib/multi.c	29 Jan 2010 23:45:19 -0000
+-@@ -42,6 +42,7 @@
++@@ -42,7 +42,8 @@
+  #include "sendf.h"
+  #include "timeval.h"
+  #include "http.h"
++ #include "warnless.h"
+ +#include "select.h"
+  
+  #define _MPRINTF_REPLACE /* use our functions only */
