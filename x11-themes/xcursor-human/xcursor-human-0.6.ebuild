@@ -1,7 +1,7 @@
 
-DESCRIPTION="Default Ubuntu cursor theme"
-HOMEPAGE="http://packages.ubuntu.com/gutsy/source/human-cursors-theme"
-SRC_URI="http://archive.ubuntu.com/ubuntu/pool/universe/h/human-cursors-theme/human-cursors-theme_${PV}.tar.gz"
+DESCRIPTION="The Human Cursor theme"
+HOMEPAGE="https://launchpad.net/human-cursors-theme/"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/human-cursors-theme_0.6.tar.gz"
 LICENSE="CCPL-Attribution-ShareAlike-2.5"
 
 SLOT="0"
