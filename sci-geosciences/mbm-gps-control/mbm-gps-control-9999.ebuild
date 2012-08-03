@@ -17,8 +17,12 @@ SLOT="0"
 KEYWORDS="~x86 ~amd64"
 IUSE=""
 
-DEPEND="sci-geosciences/mbm-gpsd"
-RDEPEND="${DEPEND}"
+RDEPEND="
+	gnome-base/gconf
+	x11-libs/gtk+:2
+	sci-geosciences/mbm-gpsd
+	"
+DEPEND="${RDEPEND}"
 
 src_unpack() {
 	git-2_src_unpack

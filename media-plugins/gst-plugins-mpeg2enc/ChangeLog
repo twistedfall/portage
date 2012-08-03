@@ -1,0 +1,36 @@
+# ChangeLog for media-plugins/gst-plugins-mpeg2enc
+# Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/media-plugins/gst-plugins-mpeg2enc/ChangeLog,v 1.5 2011/11/04 07:34:19 ford_prefect Exp $
+
+  04 Nov 2011; Arun Raghavan <ford_prefect@gentoo.org>
+  -gst-plugins-mpeg2enc-0.10.19.ebuild:
+  Remove old version
+
+*gst-plugins-mpeg2enc-0.10.22-r1 (04 Nov 2011)
+
+  04 Nov 2011; Arun Raghavan <ford_prefect@gentoo.org>
+  +gst-plugins-mpeg2enc-0.10.22-r1.ebuild,
+  +files/gst-plugins-mpeg2enc-0.10.22-compile-fix.patch:
+  Add a patch from upstream to fix compilation against mjpegtools 2.0. (fixes
+  bug #369975)
+
+*gst-plugins-mpeg2enc-0.10.22 (29 Jul 2011)
+
+  29 Jul 2011; Mart Raudsepp <leio@gentoo.org>
+  +gst-plugins-mpeg2enc-0.10.22.ebuild:
+  Version bump. Auto-plugging rank lowered due to issues in properties and
+  format negotiation
+
+*gst-plugins-mpeg2enc-0.10.21 (13 Apr 2011)
+
+  13 Apr 2011; Mart Raudsepp <leio@gentoo.org>
+  +gst-plugins-mpeg2enc-0.10.21.ebuild:
+  Version bump. No noteworthy changes.
+
+*gst-plugins-mpeg2enc-0.10.19 (03 Aug 2010)
+
+  03 Aug 2010; Mart Raudsepp <leio@gentoo.org> +metadata.xml,
+  +gst-plugins-mpeg2enc-0.10.19.ebuild:
+  Initial package for the "High-quality MPEG-1/2 video encoder" GStreamer
+  element
+
