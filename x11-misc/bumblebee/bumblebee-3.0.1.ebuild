@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit multilib systemd user
+inherit multilib systemd user eutils
 
 DESCRIPTION="Service providing elegant and stable means of managing Optimus graphics chipsets"
 HOMEPAGE="https://github.com/Bumblebee-Project/Bumblebee"
@@ -30,6 +30,11 @@ DEPEND=">=sys-devel/autoconf-2.68
 	sys-apps/help2man"
 
 REQUIRED_USE="|| ( video_cards_nouveau video_cards_nvidia )"
+
+src_prepare() {
+	epatch "${FILESDIR}/configdir.patch"
+	epatch "${FILESDIR}/systemd-postexec.patch"
+}
 
 src_configure() {
 	if use video_cards_nvidia ; then

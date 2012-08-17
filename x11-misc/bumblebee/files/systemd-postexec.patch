@@ -1,0 +1,10 @@
+--- bumblebee-3.0.1/scripts/systemd/bumblebeed.service.in.orig	2012-07-26 18:24:26.000000000 +0300
++++ bumblebee-3.0.1/scripts/systemd/bumblebeed.service.in	2012-08-17 14:43:00.300317668 +0300
+@@ -5,6 +5,7 @@
+ Type=simple
+ CPUSchedulingPolicy=idle
+ ExecStart=@SBINDIR@/bumblebeed
++ExecStopPost=/sbin/modprobe -r bbswitch
+ Restart=always
+ RestartSec=60
+ StandardOutput=kmsg
