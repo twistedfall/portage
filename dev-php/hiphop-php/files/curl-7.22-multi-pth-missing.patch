@@ -1,0 +1,10 @@
+--- curl-7.22.0/lib/multi.c.orig	2012-08-12 12:07:57.138630842 +0300
++++ curl-7.22.0/lib/multi.c	2012-08-12 12:07:20.871962607 +0300
+@@ -28,6 +28,7 @@
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
++#include <pth.h>
+ 
+ #include <curl/curl.h>
+ 
