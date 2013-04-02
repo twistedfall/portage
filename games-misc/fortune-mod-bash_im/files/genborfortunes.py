@@ -71,6 +71,7 @@ for cat in categories:
 			continue
 
 		if lastnum == None:
+			print(page)
 			m = re.search( u'<input type="text" name="page".+?numeric="integer" min="1" max="(\d+)" value="\d+" />', page )
 			if( m ):
 				lastnum = int( m.group( 1 ) )

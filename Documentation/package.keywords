@@ -1,3 +1,6 @@
-x11-drivers/nvidia-drivers::local
-dev-php/hiphop-php::local
+net-print/cndrvcups-capt-bin
+net-print/cndrvcups-common-bin
+net-print/cndrvcups-ufr2-bin
+sci-geosciences/obdgpslogger
 sys-power/cpupower::local
+sys-power/turbostat

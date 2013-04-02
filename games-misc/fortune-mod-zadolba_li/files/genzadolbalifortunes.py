@@ -71,7 +71,7 @@ while lastnum == None or num <= lastnum:
 
 	quotebuffer = ''
 
-	for quote in map( parseEntry, re.findall( '<div class="story">\s*<h2>(.+?)</h2>.*?<p>(.+?)</p>', page, re.DOTALL ) ):
+	for quote in map( parseEntry, re.findall( '<div class="story">\s*<h2>(.+?)</h2>.*?<p class="the".+?>(.+?)</p>', page, re.DOTALL ) ):
 		quotebuffer += quote.encode( 'utf-8' ) + '\n%\n'
 
 	quotes.write( quotebuffer )
