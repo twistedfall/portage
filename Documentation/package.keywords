@@ -1,6 +1,7 @@
 net-print/cndrvcups-capt-bin
 net-print/cndrvcups-common-bin
 net-print/cndrvcups-ufr2-bin
+net-proxy/charles
 sci-geosciences/obdgpslogger
 sys-power/cpupower::local
 sys-power/turbostat

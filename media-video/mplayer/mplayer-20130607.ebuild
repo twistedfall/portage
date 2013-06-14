@@ -6,10 +6,10 @@ EAPI=4
 
 FFMPEG_EGIT_REPO_URI="git://git.videolan.org/ffmpeg.git"
 FFMPEG_EGIT_BRANCH="master"
-FFMPEG_EGIT_COMMIT="fc09bf57a60d4c4a6d339b204b3282337067c06d"
+FFMPEG_EGIT_COMMIT="bc63a760837c8b173f2a3820ccb06f9cac1c07b4"
 EGIT_REPO_URI="git://gitorious.org/vaapi/mplayer.git"
 EGIT_BRANCH="hwaccel-vaapi"
-EGIT_COMMIT="99eddc30c8c388b81ea040b7c75d144d4e908092"
+EGIT_COMMIT="575be57f5ac10d40035e02b42cebef38d28d088e"
 
 inherit toolchain-funcs eutils flag-o-matic multilib base git-2
 
@@ -19,10 +19,9 @@ directfb doc +dts +dv dvb +dvd +dvdnav dxr3 +enca +encode faac +faad fbcon
 ftp gif ggi gsm +iconv ipv6 jack joystick jpeg jpeg2k kernel_linux ladspa
 +libass libcaca libmpeg2 lirc +live lzo mad md5sum +mmx mmxext mng +mp3 nas
 +network nut openal +opengl +osdmenu oss png pnm pulseaudio pvr +quicktime
-radio +rar +real +rtc rtmp samba +shm sdl +speex sse sse2 ssse3
-tga +theora +tremor +truetype +toolame +twolame +unicode v4l vaapi vdpau
-vidix +vorbis win32codecs +X +x264 xanim xinerama +xscreensaver +xv +xvid
-xvmc zoran"
+radio +rar +rtc rtmp samba +shm sdl +speex sse sse2 ssse3
+tga +theora +tremor +truetype +toolame +twolame +unicode v4l vaapi vdpau vidix
++vorbis +X +x264 xanim xinerama +xscreensaver +xv +xvid xvmc zoran"
 
 VIDEO_CARDS="s3virge mga tdfx"
 for x in ${VIDEO_CARDS}; do
@@ -54,18 +53,13 @@ RDEPEND+="
 	sys-libs/ncurses
 	app-arch/bzip2
 	sys-libs/zlib
-	!bindist? (
-		x86? (
-			win32codecs? ( media-libs/win32codecs )
-		)
-	)
 	a52? ( media-libs/a52dec )
 	aalib? ( media-libs/aalib )
 	alsa? ( media-libs/alsa-lib )
 	bidi? ( dev-libs/fribidi )
 	bluray? ( >=media-libs/libbluray-0.2.1 )
 	bs2b? ( media-libs/libbs2b )
-	cdio? ( dev-libs/libcdio )
+	cdio? ( || ( dev-libs/libcdio-paranoia <dev-libs/libcdio-0.90[-minimal] ) )
 	cdparanoia? ( !cdio? ( media-sound/cdparanoia ) )
 	dga? ( x11-libs/libXxf86dga )
 	directfb? ( dev-libs/DirectFB )
@@ -90,7 +84,7 @@ RDEPEND+="
 	iconv? ( virtual/libiconv )
 	jack? ( media-sound/jack-audio-connection-kit )
 	jpeg? ( virtual/jpeg )
-	jpeg2k? ( media-libs/openjpeg )
+	jpeg2k? ( media-libs/openjpeg:0 )
 	ladspa? ( media-libs/ladspa-sdk )
 	libass? ( >=media-libs/libass-0.9.10[enca?] )
 	libcaca? ( media-libs/libcaca )
@@ -163,7 +157,7 @@ KEYWORDS="~amd64 ~x86"
 # libvorbis require external tremor to work
 # radio requires oss or alsa backend
 # xvmc requires xvideo support
-REQUIRED_USE="bindist? ( !faac !win32codecs )
+REQUIRED_USE="bindist? ( !faac )
 	dvdnav? ( dvd )
 	libass? ( truetype )
 	truetype? ( iconv )
@@ -171,8 +165,8 @@ REQUIRED_USE="bindist? ( !faac !win32codecs )
 	ggi? ( X )
 	xinerama? ( X )
 	dga? ( X )
-	opengl? ( X )
-	osdmenu? ( X )
+	opengl? ( || ( X aqua ) )
+	osdmenu? ( || ( X aqua ) )
 	vdpau? ( X )
 	vidix? ( X )
 	xscreensaver? ( X )
@@ -214,6 +208,12 @@ src_prepare() {
 	# fix path to bash executable in configure scripts
 	sed -i -e "1c\#!${EPREFIX}/bin/bash" configure version.sh || die
 
+	if has_version dev-libs/libcdio-paranoia; then
+		sed -i \
+			-e 's:cdio/cdda.h:cdio/paranoia/cdda.h:' \
+			-e 's:cdio/paranoia.h:cdio/paranoia/paranoia.h:' \
+			configure stream/stream_cdda.c || die
+	fi
 	base_src_prepare
 }
 src_configure() {
@@ -329,12 +329,6 @@ src_configure() {
 	myconf+=" --disable-musepack" # Use internal musepack codecs for SV7 and SV8 support
 	myconf+=" --disable-libmpeg2-internal" # always use system media-libs/libmpeg2
 	use dts || myconf+=" --disable-libdca"
-	# Disable internal mp3lib, bug #384849
-	# Samuli Suominen: Looks like MPlayer in Portage is using internal mp3lib by
-	# default, where as mpg123 upstream has incorporated all the optimizations
-	# from mplayer's mp3lib	in libmpg123 and more.
-	# It makes very little sense to use the internal copy as default anymore.
-	myconf+=" --disable-mp3lib"
 	if ! use mp3; then
 		myconf+="
 			--disable-mp3lame
@@ -380,28 +374,8 @@ src_configure() {
 	# Binary codecs #
 	#################
 	# bug 213836
-	if ! use x86 || ! use win32codecs; then
 		use quicktime || myconf+=" --disable-qtx"
-	fi
-
-	######################
-	# RealPlayer support #
-	######################
-	# Realplayer support shows up in four places:
-	# - libavcodec (internal)
-	# - win32codecs
-	# - realcodecs (win32codecs libs)
-	# - realcodecs (realplayer libs)
-
-	# internal
-	use real || myconf+=" --disable-real"
-
-	# Real binary codec support only available on x86, amd64
-	if use real; then
-		use x86 && myconf+=" --codecsdir=/opt/RealPlayer/codecs"
-		use amd64 && myconf+=" --codecsdir=/usr/$(get_libdir)/codecs"
-	fi
-	myconf+=" $(use_enable win32codecs win32dll)"
+	myconf+=" --disable-real --disable-win32dll"
 
 	################
 	# Video Output #
@@ -546,10 +520,6 @@ src_install() {
 	dodoc DOCS/tech/{*.txt,MAINTAINERS,mpsub.sub,playtree,TODO,wishlist}
 	docinto TOOLS/
 	dodoc -r TOOLS
-	if use real; then
-		docinto tech/realcodecs/
-		dodoc DOCS/tech/realcodecs/*
-	fi
 	docinto tech/mirrors/
 	dodoc DOCS/tech/mirrors/*
 

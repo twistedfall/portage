@@ -1,9 +1,9 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/bumblebee/bumblebee-3.1.ebuild,v 1.1 2013/02/26 19:57:39 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/bumblebee/bumblebee-3.2.1.ebuild,v 1.1 2013/05/26 18:55:23 pacho Exp $
 
 EAPI=5
-inherit eutils multilib readme.gentoo systemd user udev
+inherit eutils multilib readme.gentoo systemd user
 
 DESCRIPTION="Service providing elegant and stable means of managing Optimus graphics chipsets"
 HOMEPAGE="http://bumblebee-project.org https://github.com/Bumblebee-Project/Bumblebee"
@@ -15,23 +15,23 @@ KEYWORDS="~amd64 ~x86"
 
 IUSE="+bbswitch video_cards_nouveau video_cards_nvidia"
 
-RDEPEND="x11-misc/virtualgl:=
-	bbswitch? ( sys-power/bbswitch )
+RDEPEND="
 	virtual/opengl
-	x11-base/xorg-drivers[video_cards_nvidia?,video_cards_nouveau?]"
-DEPEND=">=sys-devel/autoconf-2.68
-	sys-devel/automake
-	sys-devel/gcc
-	virtual/pkgconfig
+	x11-base/xorg-drivers[video_cards_nvidia?,video_cards_nouveau?]
+	x11-misc/virtualgl:=
+	bbswitch? ( sys-power/bbswitch )
+"
+DEPEND="${RDEPEND}
 	dev-libs/glib:2
-	x11-libs/libX11
 	dev-libs/libbsd
-	sys-apps/help2man"
+	sys-apps/help2man
+	virtual/pkgconfig
+	x11-libs/libX11
+"
 
 REQUIRED_USE="|| ( video_cards_nouveau video_cards_nvidia )"
 
 src_prepare() {
-	epatch "${FILESDIR}/configdir.patch"
 	epatch "${FILESDIR}/systemd-postexec.patch"
 }
 
@@ -55,7 +55,6 @@ src_configure() {
 
 	econf \
 		--docdir=/usr/share/doc/"${PF}" \
-		--with-udev-rules="$(udev_get_udevdir)/rules.d"
 		${ECONF_PARAMS}
 }
 

@@ -9,7 +9,7 @@ FFMPEG_EGIT_BRANCH="master"
 FFMPEG_EGIT_COMMIT="93e75c78ddae7ac1fd7211b9269b5cdcfd30c665"
 EGIT_REPO_URI="git://gitorious.org/vaapi/mplayer.git"
 EGIT_BRANCH="hwaccel-vaapi"
-EGIT_COMMIT="f1ad459a263f8537f6cba3bf479daea61c6104b9"
+EGIT_COMMIT="3f4cfa083f5bbbdee20412cfa1142b1e8c392d5e"
 
 inherit toolchain-funcs eutils flag-o-matic multilib base git-2
 
