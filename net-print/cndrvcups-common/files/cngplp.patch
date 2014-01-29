@@ -1,0 +1,12 @@
+diff -ur cndrvcups-common-2.60-1.orig/cngplp/src/Makefile.am cndrvcups-common-2.60-1/cngplp/src/Makefile.am
+--- cndrvcups-common-2.60-1.orig/cngplp/src/Makefile.am	2013-01-23 03:43:26.000000000 +0200
++++ cndrvcups-common-2.60-1/cngplp/src/Makefile.am	2014-01-27 16:07:24.302040072 +0200
+@@ -10,7 +10,7 @@
+         @PACKAGE_CFLAGS@\
+         @GLADE_PACKAGE_CFLAGS@
+ cngplp_SOURCES= main.c mainwnd.c mainwnd.h printerinfo.c printerinfo.h load.c load.h
+-cngplp_LDADD=@PACKAGE_LIBS@ @GLADE_PACKAGE_LIBS@  -lcups
++cngplp_LDADD=@PACKAGE_LIBS@ @GLADE_PACKAGE_LIBS@  -lcups -lgmodule-2.0
+ cngplp_LDFLAGS=-rpath $(libdir)
+ 
+ conf_DATA = cngplp.glade

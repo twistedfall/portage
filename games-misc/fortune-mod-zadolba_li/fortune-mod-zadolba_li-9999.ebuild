@@ -14,7 +14,7 @@ RDEPEND="games-misc/fortune-mod"
 src_unpack() {
 	cd "${WORKDIR}"
 	einfo "Fetching new quotes file..."
-	/usr/bin/env python "${FILESDIR}/genzadolbalifortunes.py" || die Cannot fetch file
+	/usr/bin/env python2.7 "${FILESDIR}/genzadolbalifortunes.py" || die Cannot fetch file
 }
 
 src_compile() {

@@ -15,7 +15,7 @@ DEPEND=">=dev-lang/python-2.4"
 src_unpack() {
 	cd "${WORKDIR}"
 	einfo "Fetching new quotes file..."
-	/usr/bin/env python "${FILESDIR}/genithappensfortunes.py" || die Cannot fetch file
+	/usr/bin/env python2.7 "${FILESDIR}/genithappensfortunes.py" || die Cannot fetch file
 }
 
 src_compile() {

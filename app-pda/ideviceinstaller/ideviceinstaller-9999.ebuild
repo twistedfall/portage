@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit git
+inherit git-2
 
 DESCRIPTION="Manage Applications of an iPhone or iPod Touch"
 HOMEPAGE="http://cgit.sukimashita.com/ideviceinstaller.git/"

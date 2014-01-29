@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit git
-
 EAPI="2"
+
+inherit git-2
 
 DESCRIPTION="Restores firmware and filesystem to iPhone/iPod Touch"
 HOMEPAGE="https://github.com/posixninja/idevicerestore"

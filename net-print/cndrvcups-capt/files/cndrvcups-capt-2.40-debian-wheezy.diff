@@ -1,0 +1,58 @@
+diff -Nuar cndrvcups-capt-2.40.orig/cngplp/configure.in cndrvcups-capt-2.40/cngplp/configure.in
+--- cndrvcups-capt-2.40.orig/cngplp/configure.in	2011-05-26 05:21:44.000000000 +0300
++++ cndrvcups-capt-2.40/cngplp/configure.in	2012-11-05 01:59:00.000000000 +0200
+@@ -35,7 +35,7 @@
+ AM_GLIB_GNU_GETTEXT
+ 
+ AM_DISABLE_STATIC
+-AC_PROG_LIBTOOL
++AM_PROG_LIBTOOL
+ 
+ AC_OUTPUT([Makefile
+                  cngplpmod/Makefile
+diff -Nuar cndrvcups-capt-2.40.orig/debian/control cndrvcups-capt-2.40/debian/control
+--- cndrvcups-capt-2.40.orig/debian/control	2011-07-05 10:37:16.000000000 +0300
++++ cndrvcups-capt-2.40/debian/control	2012-11-05 01:59:00.000000000 +0200
+@@ -6,7 +6,7 @@
+ Standards-Version: 3.6.1
+ 
+ Package: cndrvcups-capt
+-Architecture: i386
++Architecture: i386 amd64
+ Depends: ${shlibs:Depends}, ${misc:Depends}, cndrvcups-common (>= 2.40)
+ Replaces: cndrvcups-lipslx, cndrvcups-ufr2-uk, cndrvcups-ufr2-us
+ Description: Canon CAPT Printer Driver for Linux
+diff -Nuar cndrvcups-capt-2.40.orig/debian/rules cndrvcups-capt-2.40/debian/rules
+--- cndrvcups-capt-2.40.orig/debian/rules	2011-08-02 11:04:27.000000000 +0300
++++ cndrvcups-capt-2.40/debian/rules	2012-11-05 01:59:00.000000000 +0200
+@@ -169,7 +169,7 @@
+ #	dh_python
+ #	dh_makeshlibs
+ 	dh_installdeb
+-	dh_shlibdeps
++	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+ 	dh_gencontrol
+ 	dh_md5sums
+ 	dh_builddeb
+diff -Nuar cndrvcups-capt-2.40.orig/statusui/src/ppapdata.c cndrvcups-capt-2.40/statusui/src/ppapdata.c
+--- cndrvcups-capt-2.40.orig/statusui/src/ppapdata.c	2011-10-27 05:03:50.000000000 +0300
++++ cndrvcups-capt-2.40/statusui/src/ppapdata.c	2012-11-05 01:59:00.000000000 +0200
+@@ -24,6 +24,7 @@
+ #include <string.h>
+ 
+ #include <cups/cups.h>
++#include <cups/ppd.h>
+ #include "uimain.h"
+ #include "cnsktmodule.h"
+ 
+diff -Nuar cndrvcups-capt-2.40.orig/statusui/src/uimain.c cndrvcups-capt-2.40/statusui/src/uimain.c
+--- cndrvcups-capt-2.40.orig/statusui/src/uimain.c	2011-10-27 04:57:32.000000000 +0300
++++ cndrvcups-capt-2.40/statusui/src/uimain.c	2012-11-05 01:59:00.000000000 +0200
+@@ -29,6 +29,7 @@
+ #include "interface.h"
+ #include "data_process.h"
+ #include <cups/cups.h>
++#include <cups/ppd.h>
+ #define	MAX_WORD_SIZE	512
+ 
+ #define LOCALE_STRING_JA	"ja_JP.UTF-8"

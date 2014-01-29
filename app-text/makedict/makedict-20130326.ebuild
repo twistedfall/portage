@@ -1,4 +1,6 @@
 
+EAPI=4
+
 inherit eutils cmake-utils git-2
 
 DESCRIPTION="Dictionary converter"
