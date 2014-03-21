@@ -1,12 +1,12 @@
-diff -ur libssh-0.5.4.orig/src/options.c libssh-0.5.4/src/options.c
---- libssh-0.5.4.orig/src/options.c	2013-01-22 12:38:30.000000000 +0200
-+++ libssh-0.5.4/src/options.c	2013-03-22 10:39:51.144024439 +0200
-@@ -454,7 +454,7 @@
-       if (value == NULL) {
-         SAFE_FREE(session->sshdir);
- 
--        session->sshdir = ssh_path_expand_tilde("~/.ssh");
-+        session->sshdir = ssh_path_expand_tilde("~/.config/ssh");
-         if (session->sshdir == NULL) {
-           return -1;
-         }
+diff -ur libssh-0.6.3.orig/src/options.c libssh-0.6.3/src/options.c
+--- libssh-0.6.3.orig/src/options.c	2014-02-04 16:59:24.000000000 +0200
++++ libssh-0.6.3/src/options.c	2014-03-13 14:55:34.261447434 +0200
+@@ -526,7 +526,7 @@
+             v = value;
+             SAFE_FREE(session->opts.sshdir);
+             if (v == NULL) {
+-                session->opts.sshdir = ssh_path_expand_tilde("~/.ssh");
++                session->opts.sshdir = ssh_path_expand_tilde("~/.config/ssh");
+                 if (session->opts.sshdir == NULL) {
+                     return -1;
+                 }
