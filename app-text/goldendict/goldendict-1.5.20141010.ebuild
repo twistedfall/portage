@@ -9,7 +9,7 @@ inherit l10n qt4-r2 git-2 eutils
 
 EGIT_REPO_URI="https://github.com/goldendict/goldendict.git"
 EGIT_BRANCH="master"
-EGIT_COMMIT="c45bf96701b00181c7332d0c8c7fd8350846e975"
+EGIT_COMMIT="b627c1e2d8899d90e970a2653e8af5a63380f43f"
 
 DESCRIPTION="Feature-rich dictionary lookup program"
 HOMEPAGE="http://goldendict.org/"

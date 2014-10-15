@@ -54,7 +54,7 @@ while lastnum == None or num <= lastnum:
 	sys.stdout.flush()
 	try:
 		hurl = urllib.urlopen( baseurl + str( num ) )
-		page = hurl.read().decode( 'cp1251' )
+		page = hurl.read().decode( 'utf-8' )
 		hurl.close()
 	except ( IOError, AttributeError ):
 		print '(retrying)',
