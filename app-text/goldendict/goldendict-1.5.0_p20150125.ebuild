@@ -9,7 +9,7 @@ inherit l10n qt4-r2 git-2 eutils
 
 EGIT_REPO_URI="https://github.com/goldendict/goldendict.git"
 EGIT_BRANCH="master"
-EGIT_COMMIT="b627c1e2d8899d90e970a2653e8af5a63380f43f"
+EGIT_COMMIT="0e1b453b7af104c320ea87f54bf209a7c6d3ba14"
 
 DESCRIPTION="Feature-rich dictionary lookup program"
 HOMEPAGE="http://goldendict.org/"
@@ -25,14 +25,16 @@ RDEPEND="
 	media-libs/libvorbis
 	sys-libs/zlib
 	x11-libs/libXtst
-	>=dev-qt/qtcore-4.5:4[exceptions,qt3support]
-	>=dev-qt/qtgui-4.5:4[exceptions,qt3support]
-	>=dev-qt/qtwebkit-4.5:4[exceptions]
+	>=dev-qt/qtcore-4.6:4[exceptions,qt3support]
+	>=dev-qt/qtgui-4.6:4[exceptions,qt3support]
+	>=dev-qt/qtwebkit-4.6:4[exceptions]
+	>=dev-qt/qthelp-4.6:4
 	!kde? ( || (
 		>=x11-libs/qt-phonon-4.5:4[exceptions]
 		media-libs/phonon
 	) )
 	kde? ( media-libs/phonon )
+	media-libs/libao
 "
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
@@ -51,7 +53,7 @@ src_prepare() {
 }
 
 src_configure() {
-	PREFIX="${EPREFIX}"/usr eqmake4
+	PREFIX="${EPREFIX}"/usr eqmake4 "CONFIG+=no_epwing_support"
 }
 
 src_install() {

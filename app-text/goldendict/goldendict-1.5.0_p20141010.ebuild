@@ -33,6 +33,7 @@ RDEPEND="
 		media-libs/phonon
 	) )
 	kde? ( media-libs/phonon )
+	media-libs/libao
 "
 DEPEND="${RDEPEND}
 	virtual/pkgconfig

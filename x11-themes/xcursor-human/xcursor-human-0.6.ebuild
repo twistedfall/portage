@@ -14,16 +14,17 @@ S=${WORKDIR}/human-cursors-theme-${PV}
 
 src_install()
 {
-	python setup.py install --prefix=${D}/usr
+	python setup.py install --prefix=${D}/usr --optimize=1
 	# move cursor files to correct places
 	dodir /usr/share/cursors/xorg-x11
-	mv ${D}/usr/share/icons/Human ${D}/usr/share/cursors/xorg-x11
-	rm -rf ${D}/usr/share/icons
-	rm -rf ${D}/usr/share/themes
+	#mv ${D}/usr/share/icons/Human ${D}/usr/share/cursors/xorg-x11
+	#rm -rf ${D}/usr/share/icons
+	#rm -rf ${D}/usr/share/themes
 	cd ${S}
 	dodoc AUTHORS ChangeLog COPYING INSTALL NEWS README
 	# do cursor cleanup and alias setup
-	cd ${D}/usr/share/cursors/xorg-x11/Human/cursors
+	#cd ${D}/usr/share/cursors/xorg-x11/Human/cursors
+	cd ${D}/usr/share/icons/Human/cursors
 	rm 08e8e1c95fe2fc01f976f1e063a24ccd # redundant file, will symlink it later
 	# setup names according to specs
 	ln -s fleur					allscroll
