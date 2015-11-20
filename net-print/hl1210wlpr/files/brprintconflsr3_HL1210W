@@ -1,0 +1,2 @@
+#!/bin/sh
+/opt/brother/Printers/HL1210W/lpd/brprintconflsr3 -P HL1210W $*

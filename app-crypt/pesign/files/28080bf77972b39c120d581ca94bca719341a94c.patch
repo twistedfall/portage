@@ -1,0 +1,29 @@
+diff -ur pesign-0.110.orig/Make.defaults pesign-0.110/Make.defaults
+--- pesign-0.110.orig/Make.defaults	2014-10-24 21:51:06.000000000 +0200
++++ pesign-0.110/Make.defaults	2015-10-13 10:07:50.300781041 +0200
+@@ -3,7 +3,7 @@
+ 
+ HOSTARCH   = $(shell uname -m | sed s,i[3456789]86,ia32,)
+ ARCH	   := $(shell uname -m | sed s,i[3456789]86,ia32,)
+-INCDIR	   = -I$(TOPDIR)/include
++INCDIR	   = -I$(TOPDIR)/include -I/usr/include/nspr -I/usr/include/efivar
+ CPPFLAGS   = -DCONFIG_$(ARCH)
+ CFLAGS     = -g -O0
+ BUILDFLAGS := $(CFLAGS) $(ARCH3264) -Wall -fshort-wchar -fno-strict-aliasing -fno-merge-constants --std=gnu99 -D_GNU_SOURCE -Wno-unused-result -Wno-unused-function
+diff -ur pesign-0.110.orig/src/Makefile pesign-0.110/src/Makefile
+--- pesign-0.110.orig/src/Makefile	2014-10-24 21:51:06.000000000 +0200
++++ pesign-0.110/src/Makefile	2015-10-13 10:07:24.427894151 +0200
+@@ -4,11 +4,11 @@
+ include $(TOPDIR)/Make.defaults
+ 
+ PKLIBS = nss
+-LIBS = popt uuid efivar
++LIBS = popt uuid efivar plc4 nspr4
+ STATIC_LIBS = $(TOPDIR)/libdpe/libdpe.a
+ LDFLAGS =
+ CCLDFLAGS = -L../libdpe $(foreach pklib,$(PKLIBS), $(shell pkg-config --libs-only-L $(pklib))) -pie -fPIE -Wl,-z,relro,-z,now
+-BUILDFLAGS += -I../include/ $(foreach pklib,$(PKLIBS), $(shell pkg-config --cflags $(pklib))) -Werror -fPIE
++BUILDFLAGS += -I../include/ $(foreach pklib,$(PKLIBS), $(shell pkg-config --cflags $(pklib)))  -fPIE
+ 
+ TARGETS = pesign authvar client efisiglist efikeygen pesigcheck
+ 

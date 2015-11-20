@@ -1,0 +1,120 @@
+diff -ur als.orig/als.c als/als.c
+--- als.orig/als.c	2015-03-06 10:09:01.000000000 +0200
++++ als/als.c	2015-03-06 10:17:11.752037826 +0200
+@@ -32,22 +32,52 @@
+ 	.owner = THIS_MODULE,
+ };
+ 
++/*
++ * als_get_ali - get the ambient light illuminance
++ */
+ static u32 als_get_ali(struct acpi_device *device)
+ {
+-	u64 ali;
++	u64 illuminance;
+ 	acpi_status status;
+ 
+-	status = acpi_evaluate_integer(device->handle, (acpi_string) "_ALI", NULL, &ali);
++	status = acpi_evaluate_integer(device->handle, (acpi_string) "_ALI",
++				       NULL, &illuminance);
++	if (ACPI_FAILURE(status))
++		ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "_ALI not supported\n"));
+ 
+-	return ali;
++	return illuminance;
+ }
+ 
+-static ssize_t als_show_ali(struct device *dev,
+-	struct device_attribute *attr, char *buf)
++/*
++ * als_get_alt - get the ambient light temperature
++ */
++static u32 als_get_alt(struct acpi_device *device)
+ {
+-	struct acpi_device *device = to_acpi_device(dev);
++	u64 temperature;
++	acpi_status status;
++
++	status = acpi_evaluate_integer(device->handle, (acpi_string) "_ALT",
++				       NULL, &temperature);
++	if (ACPI_FAILURE(status))
++		ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "_ALT not supported\n"));
++
++	return temperature;
++}
++
++/*
++ * als_get_alc - get the ambient light color chromaticity
++ */
++static u32 als_get_alc(struct acpi_device *device)
++{
++	u64 chromaticity;
++	acpi_status status;
++
++	status = acpi_evaluate_integer(device->handle, (acpi_string) "_ALC",
++				       NULL, &chromaticity);
++	if (ACPI_FAILURE(status))
++		ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "_ALC not supported\n"));
+ 
+-	return sprintf(buf, "%d\n", als_get_ali(device));
++	return chromaticity;
+ }
+ 
+ static u32 als_get_raw_value(struct acpi_device *device)
+@@ -108,7 +138,35 @@
+ 	return sprintf(buf, "%d\n", 0xf );
+ }
+ 
+-static DEVICE_ATTR(ali,         S_IRUGO, als_show_ali,          NULL);
++/*
++ * als_get_alp - get the recommended polling frequency of the sensor
++ */
++static u32 als_get_alp(struct acpi_device *device)
++{
++	u64 polling;
++	acpi_status status;
++
++	status = acpi_evaluate_integer(device->handle, (acpi_string) "_ALP",
++				       NULL, &polling);
++	if (ACPI_FAILURE(status))
++		ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "_ALP not supported\n"));
++
++	return polling;
++}
++
++#define als_dev_attr(_dev_name, _name_show, _ret_val)		\
++static ssize_t _name_show(struct device *dev,			\
++		struct device_attribute *attr, char *buf)	\
++{								\
++	struct acpi_device *device = to_acpi_device(dev);	\
++	return sprintf(buf, "%d\n", _ret_val);			\
++}								\
++static DEVICE_ATTR(_dev_name, S_IRUGO, _name_show, NULL);	\
++
++als_dev_attr(illuminance, als_ali_show, als_get_ali(device))
++als_dev_attr(temperature, als_alt_show, als_get_alt(device))
++als_dev_attr(chromaticity, als_alc_show, als_get_alc(device))
++als_dev_attr(polling, als_alp_show, als_get_alp(device))
+ static DEVICE_ATTR(raw_value,   S_IRUGO, als_show_raw_value,    NULL);
+ static DEVICE_ATTR(raw_max,     S_IRUGO, als_show_raw_max,      NULL);
+ 
+@@ -179,7 +237,10 @@
+ static DEVICE_ATTR(enable, S_IWUSR, NULL, als_enable_disable);
+ 
+ static struct attribute *als_attributes[] = {
+-	&dev_attr_ali.attr,
++	&dev_attr_illuminance.attr,
++	&dev_attr_temperature.attr,
++	&dev_attr_chromaticity.attr,
++	&dev_attr_polling.attr,
+ 	&dev_attr_enable.attr,
+ 	&dev_attr_raw_value.attr,
+ 	&dev_attr_raw_max.attr,
+@@ -205,7 +266,6 @@
+ 
+ static void als_notify(struct acpi_device* device, u32 event)
+ {
+-	pr_info("als_notify %x %x\n", event, als_get_ali(device));
+ 	kobject_uevent(&device->dev.kobj, KOBJ_CHANGE);
+ }
+ 
