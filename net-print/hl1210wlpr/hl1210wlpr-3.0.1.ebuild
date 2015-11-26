@@ -1,5 +1,5 @@
 
-EAPI="5"
+EAPI=5
 
 inherit rpm
 
@@ -16,19 +16,23 @@ S="$WORKDIR"
 
 RDEPEND="net-print/cups"
 
+QA_FLAGS_IGNORED="
+	opt/brother/Printers/HL1210W/lpd/rawtobr3
+	opt/brother/Printers/HL1210W/lpd/brprintconflsr3
+	opt/brother/Printers/HL1210W/inf/braddprinter
+"
+
 src_compile()
 {
-	
 	echo \[psconvert2\] >> "${S}/opt/brother/Printers/HL1210W/inf/brHL1210Wfunc"
 	echo pstops=/usr/libexec/cups/filter/pstops >> "${S}/opt/brother/Printers/HL1210W/inf/brHL1210Wfunc"
 }
 
 src_install()
 {
-	cp -r "${S}/etc" "${D}"
-	cp -r "${S}/opt" "${D}"
-	ln -s /opt/brother/Printers/HL1210W/inf/brHL1210Wrc "${D}/etc/opt/brother/Printers/HL1210W/inf"
-	cp -r "${S}/var" "${D}"
+	insinto /
+	doins -r *
+	dosym "/opt/brother/Printers/HL1210W/inf/brHL1210Wrc" "/etc/opt/brother/Printers/HL1210W/inf/brHL1210Wrc"
 	exeinto "/usr/bin"
 	doexe "${FILESDIR}/brprintconflsr3_HL1210W"
 }
