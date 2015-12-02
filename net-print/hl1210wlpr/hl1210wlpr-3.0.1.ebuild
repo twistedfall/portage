@@ -30,8 +30,7 @@ src_compile()
 
 src_install()
 {
-	insinto /
-	doins -r *
+	cp -r "${S}"/* -t "${D}/"
 	dosym "/opt/brother/Printers/HL1210W/inf/brHL1210Wrc" "/etc/opt/brother/Printers/HL1210W/inf/brHL1210Wrc"
 	exeinto "/usr/bin"
 	doexe "${FILESDIR}/brprintconflsr3_HL1210W"

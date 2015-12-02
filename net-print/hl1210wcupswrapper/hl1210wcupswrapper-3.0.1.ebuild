@@ -20,8 +20,7 @@ QA_FLAGS_IGNORED="/opt/brother/Printers/HL1210W/cupswrapper/brcupsconfig4"
 
 src_install()
 {
-	insinto /
-	doins -r opt
+	cp -r "${S}/opt" "${D}/"
 	dodir "/usr/libexec/cups/filter/"
 	dosym "/opt/brother/Printers/HL1210W/cupswrapper/brother_lpdwrapper_HL1210W" "/usr/libexec/cups/filter/brother_lpdwrapper_HL1210W"
 	dodir "/usr/share/cups/model"
