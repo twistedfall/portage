@@ -1,14 +1,18 @@
 
 EAPI=4
 
-inherit eutils cmake-utils git-2
+inherit eutils cmake-utils git-r3
 
 DESCRIPTION="Dictionary converter"
 HOMEPAGE="https://github.com/soshial/xdxf_makedict"
 
 EGIT_REPO_URI="git://github.com/soshial/xdxf_makedict.git"
-EGIT_BRANCH="master"
-EGIT_COMMIT="146f2fcf64f9b74b396a15889d7f4249097cebf2"
+EGIT_COMMIT="163ae7f142446eaa6717525cc7e26c7575b4df5f"
+
+PATCHES=(
+	"${FILESDIR}/glib.patch"
+	"${FILESDIR}/readme_path.patch"
+)
 
 LICENSE="GPL-2"
 SLOT="0"

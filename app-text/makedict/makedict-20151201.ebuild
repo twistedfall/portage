@@ -7,7 +7,7 @@ DESCRIPTION="Dictionary converter"
 HOMEPAGE="https://github.com/soshial/xdxf_makedict"
 
 EGIT_REPO_URI="git://github.com/soshial/xdxf_makedict.git"
-EGIT_COMMIT="5d4be74f56ea57261676288227c5a9d68e2f9eb1"
+EGIT_COMMIT="3bd4ba5c8e823765f78c72aeec0c23ac580ddc52"
 
 PATCHES=( "${FILESDIR}/glib.patch" )
 
