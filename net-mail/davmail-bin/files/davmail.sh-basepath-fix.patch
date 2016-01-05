@@ -1,0 +1,11 @@
+diff -ur davmail.orig/davmail.sh davmail/davmail.sh
+--- davmail.orig/davmail.sh	2016-01-05 11:42:04.000000000 +0100
++++ davmail/davmail.sh	2016-01-05 11:43:44.544584769 +0100
+@@ -3,6 +3,6 @@
+ # install java :
+ # sudo apt-get install default-jre
+ # launch davmail
+-BASE=`dirname $0`
++BASE="$(dirname "$(readlink -f "$0")")"
+ for i in $BASE/lib/*; do export CLASSPATH=$CLASSPATH:$i; done
+ exec java -Xmx512M -Dsun.net.inetaddr.ttl=60 -cp $BASE/davmail.jar:$CLASSPATH davmail.DavGateway $1
