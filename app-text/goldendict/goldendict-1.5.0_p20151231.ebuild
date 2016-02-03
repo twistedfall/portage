@@ -8,8 +8,7 @@ PLOCALES="ar_SA bg_BG cs_CZ de_DE el_GR it_IT lt_LT ru_RU uk_UA vi_VN zh_CN"
 inherit l10n qt4-r2 git-r3 eutils
 
 EGIT_REPO_URI="https://github.com/goldendict/goldendict.git"
-EGIT_BRANCH="master"
-EGIT_COMMIT="b19df25e304e66d6180b34484142a84fd4d1b4b3"
+EGIT_COMMIT="e037533424dc8c5b574ed23249fda429d186a516"
 
 DESCRIPTION="Feature-rich dictionary lookup program"
 HOMEPAGE="http://goldendict.org/"
