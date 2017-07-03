@@ -10,7 +10,7 @@ inherit autotools eutils gnome2-utils python-r1 systemd multilib bash-completion
 
 DESCRIPTION="A firewall daemon with D-BUS interface providing a dynamic firewall"
 HOMEPAGE="http://www.firewalld.org/"
-SRC_URI="https://fedorahosted.org/released/${PN}/${P}.tar.bz2
+SRC_URI="https://github.com/${PN}/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz
 	${BACKPORTS:+https://dev.gentoo.org/~cardoe/distfiles/${P}-${BACKPORTS}.tar.xz}"
 
 LICENSE="GPL-2+"
