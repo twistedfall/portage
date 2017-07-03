@@ -1,5 +1,5 @@
 
-EAPI=4
+EAPI=5
 
 inherit cmake-utils git-r3
 
@@ -26,7 +26,11 @@ DEPEND="
 "
 
 IUSE="debug"
-mycmakeargs=( "$(use !debug && echo "-DCMAKE_RELEASE=TRUE")" )
+
+src_configure() {
+        local mycmakeargs=( "$(use !debug && echo "-DCMAKE_RELEASE=TRUE")" )
+        cmake-utils_src_configure
+}
 
 src_install()
 {

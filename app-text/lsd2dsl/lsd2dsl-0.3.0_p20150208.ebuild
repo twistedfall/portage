@@ -1,5 +1,5 @@
 
-EAPI=4
+EAPI=5
 
 inherit cmake-utils git-r3
 
@@ -21,13 +21,17 @@ DEPEND="
 	media-libs/libvorbis
 	media-libs/libsndfile
 	debug? ( dev-cpp/gtest )
-	sys-devel/gcc:4.9
+	sys-devel/gcc
 	dev-qt/qtwidgets:5
 	dev-qt/qtcore:5
 "
 
 IUSE="debug"
-mycmakeargs=( "$(use !debug && echo "-DCMAKE_RELEASE=TRUE")" )
+
+src_configure() {
+        local mycmakeargs=( "$(use !debug && echo "-DCMAKE_RELEASE=TRUE")" )
+        cmake-utils_src_configure
+}
 
 src_install()
 {

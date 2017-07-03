@@ -4,7 +4,7 @@ EAPI=5
 inherit rpm
 
 DESCRIPTION="Brother HL-1210 CUPSwrapper printer driver"
-HOMEPAGE="http://support.brother.com/g/b/downloadhowto.aspx?c=es&lang=es&prod=hl1212w_us_eu&os=127&dlid=dlf101548_000&flang=4&type3=560"
+HOMEPAGE="http://support.brother.com/g/b/downloadend.aspx?c=eu_ot&lang=en&prod=hl1212w_us_eu&os=128&dlid=dlf101546_000&flang=4&type3=561"
 SRC_URI="http://download.brother.com/welcome/dlf101548/${PN}-${PV}-1.i386.rpm"
 
 LICENSE="GPL-2"

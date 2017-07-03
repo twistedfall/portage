@@ -4,7 +4,7 @@ EAPI=5
 inherit rpm
 
 DESCRIPTION="Brother HL-1210 LPR printer driver"
-HOMEPAGE="http://support.brother.com/g/b/downloadend.aspx?c=es&lang=es&prod=hl1212w_us_eu&os=127&dlid=dlf101549_000&flang=4&type3=558"
+HOMEPAGE="http://support.brother.com/g/b/downloadend.aspx?c=eu_ot&lang=en&prod=hl1212w_us_eu&os=128&dlid=dlf101547_000&flang=4&type3=559"
 SRC_URI="http://download.brother.com/welcome/dlf101549/${PN}-${PV}-1.i386.rpm"
 
 LICENSE="GPL-2"

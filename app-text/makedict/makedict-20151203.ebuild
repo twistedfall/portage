@@ -1,5 +1,5 @@
 
-EAPI=4
+EAPI=5
 
 inherit eutils cmake-utils git-r3
 
