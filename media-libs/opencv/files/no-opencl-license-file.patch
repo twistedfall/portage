@@ -1,0 +1,13 @@
+Only in opencv-3.4.6.orig: 3rdparty
+diff -ur opencv-3.4.6.orig/cmake/OpenCVDetectOpenCL.cmake opencv-3.4.6/cmake/OpenCVDetectOpenCL.cmake
+--- opencv-3.4.6.orig/cmake/OpenCVDetectOpenCL.cmake	2019-04-06 23:43:23.000000000 +0200
++++ opencv-3.4.6/cmake/OpenCVDetectOpenCL.cmake	2019-05-09 11:29:42.004020902 +0200
+@@ -5,7 +5,7 @@
+ else()
+   set(OPENCL_LIBRARY "" CACHE STRING "OpenCL library")
+   set(OPENCL_INCLUDE_DIR "${OpenCV_SOURCE_DIR}/3rdparty/include/opencl/1.2" CACHE PATH "OpenCL include directory")
+-  ocv_install_3rdparty_licenses(opencl-headers "${OpenCV_SOURCE_DIR}/3rdparty/include/opencl/LICENSE.txt")
++  #ocv_install_3rdparty_licenses(opencl-headers "${OpenCV_SOURCE_DIR}/3rdparty/include/opencl/LICENSE.txt")
+ endif()
+ mark_as_advanced(OPENCL_INCLUDE_DIR OPENCL_LIBRARY)
+ 

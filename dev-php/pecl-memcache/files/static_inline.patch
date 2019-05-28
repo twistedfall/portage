@@ -1,0 +1,51 @@
+diff -ur a/php5/memcache_pool.h b/php5/memcache_pool.h
+--- a/php5/memcache_pool.h	2018-03-20 11:00:00.869669124 +0100
++++ b/php5/memcache_pool.h	2018-03-20 11:08:09.986431600 +0100
+@@ -137,7 +137,7 @@
+ 
+ #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+ /* see https://gcc.gnu.org/gcc-5/porting_to.html */
+-#define MMC_POOL_INLINE extern inline
++#define MMC_POOL_INLINE
+ #else
+ #define MMC_POOL_INLINE inline
+ #endif
+diff -ur a/php5/memcache_queue.h b/php5/memcache_queue.h
+--- a/php5/memcache_queue.h	2018-03-20 11:00:00.869669124 +0100
++++ b/php5/memcache_queue.h	2018-03-20 11:08:15.820489559 +0100
+@@ -41,7 +41,7 @@
+ #define MMC_QUEUE_INLINE
+ #elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+ /* see https://gcc.gnu.org/gcc-5/porting_to.html */
+-#define MMC_QUEUE_INLINE extern inline
++#define MMC_QUEUE_INLINE
+ #else
+ #define MMC_QUEUE_INLINE inline
+ #endif
+diff -ur a/php7/memcache_pool.h b/php7/memcache_pool.h
+--- a/php7/memcache_pool.h	2018-03-20 11:00:30.551950786 +0100
++++ b/php7/memcache_pool.h	2018-03-20 11:14:05.075987483 +0100
+@@ -129,9 +129,9 @@
+ 
+ #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+ /* see https://gcc.gnu.org/gcc-5/porting_to.html */
+-#define MMC_POOL_INLINE extern inline
++#define MMC_POOL_INLINE
+ #else
+-#define MMC_POOL_INLINE inline
++#define MMC_POOL_INLINE
+ #endif
+ 
+ void mmc_buffer_alloc(mmc_buffer_t *, unsigned int);
+diff -ur a/php7/memcache_queue.h b/php7/memcache_queue.h
+--- a/php7/memcache_queue.h	2018-03-20 11:00:00.870669133 +0100
++++ b/php7/memcache_queue.h	2018-03-20 11:14:18.934127177 +0100
+@@ -41,7 +41,7 @@
+ #define MMC_QUEUE_INLINE
+ #elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+ /* see https://gcc.gnu.org/gcc-5/porting_to.html */
+-#define MMC_QUEUE_INLINE extern inline
++#define MMC_QUEUE_INLINE
+ #else
+ #define MMC_QUEUE_INLINE inline
+ #endif

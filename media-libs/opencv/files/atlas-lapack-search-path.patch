@@ -1,0 +1,18 @@
+diff -ur opencv-3.4.6.orig/cmake/OpenCVFindAtlas.cmake opencv-3.4.6/cmake/OpenCVFindAtlas.cmake
+--- opencv-3.4.6.orig/cmake/OpenCVFindAtlas.cmake	2019-04-06 23:43:23.000000000 +0200
++++ opencv-3.4.6/cmake/OpenCVFindAtlas.cmake	2019-05-12 16:40:12.605548707 +0200
+@@ -58,6 +58,7 @@
+ set(Atlas_INCLUDE_SEARCH_PATHS
+   /usr/include/atlas
+   /usr/include/atlas-base
++  /usr/include/eigen3/Eigen/src/misc
+   $ENV{Atlas_ROOT_DIR}
+   $ENV{Atlas_ROOT_DIR}/include
+ )
+@@ -94,4 +95,4 @@
+   mark_as_advanced(${LOOKED_FOR})
+ 
+   message(STATUS "Found Atlas (include: ${Atlas_CBLAS_INCLUDE_DIR}, library: ${Atlas_BLAS_LIBRARY})")
+-endif(ATLAS_FOUND)
+\ No newline at end of file
++endif(ATLAS_FOUND)

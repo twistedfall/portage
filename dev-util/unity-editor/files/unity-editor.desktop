@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Unity-${MY_PV}
+Exec=/opt/${P}/Editor/Unity %U
+Icon=${P}-icon
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Development;IDE;
+MimeType=x-scheme-handler/com.unity3d.kharma;
