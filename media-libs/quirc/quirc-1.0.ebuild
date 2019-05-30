@@ -1,4 +1,3 @@
-
 EAPI=7
 
 inherit eutils
@@ -6,7 +5,8 @@ inherit eutils
 DESCRIPTION="QR decoder library"
 HOMEPAGE="https://github.com/dlbeer/quirc"
 
-SRC_URI="https://github.com/dlbeer/quirc/archive/v${PV}.tar.gz -> quirc-${PV}.tar.gz"
+SRC_URI="https://github.com/dlbeer/quirc/archive/v${PV}.tar.gz"
+SONAME="libquirc.so.1.0"
 
 LICENSE="ISC"
 SLOT="0"
@@ -18,20 +18,21 @@ RDEPEND="
 "
 
 src_compile() {
-	CFLAGS+=" -fPIC"
-	make libquirc.so
 	if use static-libs ; then
 		make libquirc.a
 	fi
 	if use demos ; then
 		make quirc-scanner
 	fi
+	CFLAGS+=" -fPIC"
+	LDFLAGS+=" -Wl,-soname,${SONAME}"
+	make libquirc.so
 }
 
 src_install() {
 	doheader lib/quirc.h
-	dolib.so libquirc.so.1.0
-	dosym libquirc.so.1.0 /usr/$(get_libdir)/libquirc.so
+	dolib.so "${SONAME}"
+	dosym "${SONAME}" /usr/$(get_libdir)/libquirc.so
 	if use static-libs ; then
 		dolib.a libquirc.a
 	fi
