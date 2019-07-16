@@ -53,6 +53,10 @@ RDEPEND="
 	dev-libs/protobuf:=[${MULTILIB_USEDEP}]
 	sys-libs/zlib[${MULTILIB_USEDEP}]
 	cuda? ( dev-util/nvidia-cuda-toolkit:0= )
+	contrib? (
+		media-libs/freetype
+		media-libs/harfbuzz
+	)
 	contrib_hdf? ( sci-libs/hdf5 )
 	ffmpeg? (
 		libav? ( media-video/libav:0=[${MULTILIB_USEDEP}] )
