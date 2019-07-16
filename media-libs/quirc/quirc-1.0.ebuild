@@ -5,12 +5,12 @@ inherit eutils
 DESCRIPTION="QR decoder library"
 HOMEPAGE="https://github.com/dlbeer/quirc"
 
-SRC_URI="https://github.com/dlbeer/quirc/archive/v${PV}.tar.gz"
+SRC_URI="https://github.com/dlbeer/quirc/archive/v${PV}.tar.gz -> quirc-${PV}.tar.gz"
 SONAME="libquirc.so.1.0"
 
 LICENSE="ISC"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="~x86 ~amd64 ~arm"
 IUSE="static-libs demos"
 
 RDEPEND="
