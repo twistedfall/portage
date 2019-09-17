@@ -3,12 +3,13 @@
 
 EAPI=7
 PYTHON_COMPAT=( python{2_7,3_5,3_6} )
-inherit autotools eutils python-r1 git-r3
+inherit autotools eutils python-r1
+
+HASH="6a53de92e2b5029ee293c79d481ff5fd9528f8c3"
 
 DESCRIPTION="Support library to deal with Apple Property Lists (Binary & XML)"
 HOMEPAGE="https://www.libimobiledevice.org/"
-EGIT_REPO_URI="https://github.com/libimobiledevice/libplist"
-EGIT_COMMIT="6a53de92e2b5029ee293c79d481ff5fd9528f8c3"
+SRC_URI="https://github.com/libimobiledevice/libplist/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0/3.1.0" # based on SONAME of libplist.so
@@ -22,6 +23,7 @@ DEPEND="${RDEPEND}
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
+S="${WORKDIR}/${PN}-${HASH}"
 BUILD_DIR="${S}_build"
 
 src_prepare() {

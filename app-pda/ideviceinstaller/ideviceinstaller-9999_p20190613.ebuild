@@ -3,12 +3,14 @@
 
 EAPI=7
 
-inherit autotools git-r3
+inherit autotools
+
+HASH="ab9352110092cf651b5602301371cd00691c7e13"
 
 DESCRIPTION="A tool to interact with the installation_proxy of an Apple's iDevice"
 HOMEPAGE="https://www.libimobiledevice.org/"
+SRC_URI="https://github.com/libimobiledevice/ideviceinstaller/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 EGIT_REPO_URI="https://github.com/libimobiledevice/ideviceinstaller"
-EGIT_COMMIT="ab9352110092cf651b5602301371cd00691c7e13"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -20,6 +22,8 @@ RDEPEND=">=app-pda/libimobiledevice-1.1.4:=
 	>=dev-libs/libzip-0.8"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
+
+S="${WORKDIR}/${PN}-${HASH}"
 
 src_prepare() {
 	default

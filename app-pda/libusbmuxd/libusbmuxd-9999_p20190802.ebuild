@@ -2,12 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-inherit autotools git-r3
+inherit autotools
+
+HASH="b097ea39f391f5c2c83d8f4687843a3634f7cd54"
 
 DESCRIPTION="USB multiplex daemon for use with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-EGIT_REPO_URI="https://github.com/libimobiledevice/libusbmuxd"
-EGIT_COMMIT="b097ea39f391f5c2c83d8f4687843a3634f7cd54"
+SRC_URI="https://github.com/libimobiledevice/libusbmuxd/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 
 # tools/iproxy.c is GPL-2+, everything else is LGPL-2.1+
 LICENSE="GPL-2+ LGPL-2.1+"
@@ -21,6 +22,8 @@ RDEPEND=">=app-pda/libplist-1.12:=
 DEPEND="${RDEPEND}
 	virtual/os-headers
 	virtual/pkgconfig"
+
+S="${WORKDIR}/${PN}-${HASH}"
 
 src_prepare() {
 	default

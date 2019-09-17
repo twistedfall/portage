@@ -1,14 +1,15 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
-inherit readme.gentoo-r1 autotools git-r3
+inherit readme.gentoo-r1 autotools
+
+HASH="e75d32c34d0e8b80320f0a007d5ecbb3f55ef7f0"
 
 DESCRIPTION="Mount Apple iPhone/iPod Touch file systems for backup purposes"
 HOMEPAGE="https://www.libimobiledevice.org/"
-EGIT_REPO_URI="https://github.com/libimobiledevice/ifuse"
-EGIT_COMMIT="e75d32c34d0e8b80320f0a007d5ecbb3f55ef7f0"
+SRC_URI="https://github.com/libimobiledevice/ifuse/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
@@ -25,6 +26,8 @@ DOC_CONTENTS="Only use this filesystem driver to create backups of your data.
 The music database is hashed, and attempting to add files will cause the
 iPod/iPhone to consider your database unauthorised.
 It will respond by wiping all media files, requiring a restore through iTunes."
+
+S="${WORKDIR}/${PN}-${HASH}"
 
 src_prepare() {
 	default

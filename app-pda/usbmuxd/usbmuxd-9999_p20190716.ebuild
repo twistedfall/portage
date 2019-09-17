@@ -3,12 +3,13 @@
 
 EAPI=7
 AUTOTOOLS_AUTORECONF=1
-inherit autotools udev user git-r3
+inherit autotools udev user
+
+HASH="1f8ddeff95884da404a7fbd74d27e04ca8c99a50"
 
 DESCRIPTION="USB multiplex daemon for use with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-EGIT_REPO_URI="https://github.com/libimobiledevice/usbmuxd"
-EGIT_COMMIT="1f8ddeff95884da404a7fbd74d27e04ca8c99a50"
+SRC_URI="https://github.com/libimobiledevice/usbmuxd/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 
 # src/utils.h is LGPL-2.1+, rest is found in COPYING*
 LICENSE="GPL-2 GPL-3 LGPL-2.1+"
@@ -22,6 +23,8 @@ RDEPEND=">=app-pda/libimobiledevice-1.1.7
 DEPEND="${RDEPEND}
 	virtual/os-headers
 	virtual/pkgconfig"
+
+S="${WORKDIR}/${PN}-${HASH}"
 
 pkg_setup() {
 	enewgroup plugdev

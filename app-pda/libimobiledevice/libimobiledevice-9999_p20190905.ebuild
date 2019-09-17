@@ -4,13 +4,13 @@
 EAPI=7
 PYTHON_COMPAT=( python{2_7,3_5,3_6} )
 
-inherit autotools python-r1 git-r3
+inherit autotools python-r1
+
+HASH="a9e69b1252e5918b6d8ada1209ccefde301cfa26"
 
 DESCRIPTION="Support library to communicate with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-
-EGIT_REPO_URI="https://github.com/libimobiledevice/libimobiledevice"
-EGIT_COMMIT="a9e69b1252e5918b6d8ada1209ccefde301cfa26"
+SRC_URI="https://github.com/libimobiledevice/libimobiledevice/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 
 # While COPYING* doesn't mention 'or any later version', all the headers do, hence use +
 LICENSE="GPL-2+ LGPL-2.1+"
@@ -40,6 +40,7 @@ DEPEND="${RDEPEND}
 	python? ( >=dev-python/cython-0.17[${PYTHON_USEDEP}] )
 "
 
+S="${WORKDIR}/${PN}-${HASH}"
 BUILD_DIR="${S}_build"
 
 src_prepare() {
