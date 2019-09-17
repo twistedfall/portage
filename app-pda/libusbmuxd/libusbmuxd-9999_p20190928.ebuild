@@ -4,7 +4,7 @@
 EAPI=7
 inherit autotools
 
-HASH="b097ea39f391f5c2c83d8f4687843a3634f7cd54"
+HASH="c2db27c92341e1ba257102f6fb29a61f66c2fb6d"
 
 DESCRIPTION="USB multiplex daemon for use with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"

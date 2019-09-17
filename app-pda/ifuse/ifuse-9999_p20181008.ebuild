@@ -9,7 +9,7 @@ HASH="e75d32c34d0e8b80320f0a007d5ecbb3f55ef7f0"
 
 DESCRIPTION="Mount Apple iPhone/iPod Touch file systems for backup purposes"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://github.com/libimobiledevice/ifuse/archive/${HASH}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0"

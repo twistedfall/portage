@@ -5,7 +5,7 @@ EAPI=7
 AUTOTOOLS_AUTORECONF=1
 inherit autotools udev user
 
-HASH="1f8ddeff95884da404a7fbd74d27e04ca8c99a50"
+HASH="1afa7350f9da03365f3b8f98dcb763b396e52723"
 
 DESCRIPTION="USB multiplex daemon for use with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"

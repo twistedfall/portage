@@ -5,7 +5,7 @@ EAPI=7
 
 inherit autotools
 
-HASH="ab9352110092cf651b5602301371cd00691c7e13"
+HASH="b37ce232a44e4e212f71d3792cbd3d86e2f9ac33"
 
 DESCRIPTION="A tool to interact with the installation_proxy of an Apple's iDevice"
 HOMEPAGE="https://www.libimobiledevice.org/"
