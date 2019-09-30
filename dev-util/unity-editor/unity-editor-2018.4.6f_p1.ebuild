@@ -10,26 +10,22 @@ HOMEPAGE="https://unity3d.com/"
 # https://forum.unity.com/threads/unity-on-linux-release-notes-and-known-issues.350256/
 
 MY_PV="${PV/_p/}"
-HASH="3b349d10f010"
+HASH="cde1bbcc9f0d"
 SRC_URI_BASE="https://beta.unity3d.com/download/${HASH}"
 SRC_URI="
 	${SRC_URI_BASE}/LinuxEditorInstaller/Unity.tar.xz
 		-> ${P}.tar.xz
-	${SRC_URI_BASE}/MacStandardAssetsInstaller/StandardAssets.pkg
-		-> ${P}-StandardAssets.pkg
 	doc? ( ${SRC_URI_BASE}/MacDocumentationInstaller/Documentation.pkg
 		-> ${P}-doc.pkg )
-	examples? ( ${SRC_URI_BASE}/MacExampleProjectInstaller/Examples.pkg
-		-> ${P}-examples.pkg )
 	android? ( ${SRC_URI_BASE}/MacEditorTargetInstaller/UnitySetup-Android-Support-for-Editor-${MY_PV}.pkg
 		-> ${P}-android.pkg )
 	ios? ( ${SRC_URI_BASE}/LinuxEditorTargetInstaller/UnitySetup-iOS-Support-for-Editor-${MY_PV}.tar.xz
 		-> ${P}-ios.tar.xz )
-	mac? ( ${SRC_URI_BASE}/MacEditorTargetInstaller/UnitySetup-Mac-Support-for-Editor-${MY_PV}.pkg
+	mac? ( ${SRC_URI_BASE}/MacEditorTargetInstaller/UnitySetup-Mac-Mono-Support-for-Editor-${MY_PV}.pkg
 		-> ${P}-mac.pkg )
 	webgl? ( ${SRC_URI_BASE}/LinuxEditorTargetInstaller/UnitySetup-WebGL-Support-for-Editor-${MY_PV}.tar.xz
 		-> ${P}-webgl.tar.xz )
-	windows? ( ${SRC_URI_BASE}/MacEditorTargetInstaller/UnitySetup-Windows-Support-for-Editor-${MY_PV}.pkg
+	windows? ( ${SRC_URI_BASE}/MacEditorTargetInstaller/UnitySetup-Windows-Mono-Support-for-Editor-${MY_PV}.pkg
 		-> ${P}-windows.pkg )
 	facebook? ( ${SRC_URI_BASE}/MacEditorTargetInstaller/UnitySetup-Facebook-Games-Support-for-Editor-${MY_PV}.pkg
 		-> ${P}-facebook.pkg )
@@ -38,7 +34,7 @@ SRC_URI="
 LICENSE="Unity-EULA"
 SLOT="${PV}"
 KEYWORDS="-* ~amd64"
-IUSE="android darkskin doc examples facebook ios mac webgl windows"
+IUSE="android darkskin doc facebook ios mac webgl windows"
 
 REQUIRED_USE="facebook? ( webgl windows )"
 
@@ -59,7 +55,7 @@ RDEPEND="
 	sys-libs/libcap
 	virtual/glu
 	virtual/opengl
-	x11-libs/gtk+:2
+	x11-libs/gtk+:3[X]
 	x11-libs/libXtst
 	x11-misc/xdg-utils
 	android? (
@@ -81,14 +77,13 @@ QA_PREBUILT="*"
 
 pre_build_checks() {
 	# required components + largest component that can be cp'd during install
-	CHECKREQS_DISK_BUILD="$((3200 + 3200))"
-	use doc && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 900))"
-	use examples && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 600))"
-	use android && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 1300))"
-	use ios && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 3200))"
+	CHECKREQS_DISK_BUILD="$((3200 + 3300))"
+	use doc && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 1000))"
+	use android && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 1400))"
+	use ios && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 3300))"
 	use mac && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 200))"
-	use webgl && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 700))"
-	use windows && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 1300))"
+	use webgl && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 1000))"
+	use windows && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 1400))"
 	use facebook && CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD + 200))"
 	CHECKREQS_DISK_BUILD="$(($CHECKREQS_DISK_BUILD / 1000 + 1))G"
 	check-reqs_pkg_setup
@@ -126,7 +121,7 @@ src_unpack() {
 src_prepare() {
 	if use darkskin; then
 		cat <<-EOF > "${T}/darkskin.rapatch" || die
-			:s method.EditorResources.GetSkinIdx
+			:s method.EditorResources.GetSkinIdx__const
 			:s/x 74
 			:wao nop
 		EOF
@@ -145,17 +140,10 @@ src_install() {
 	mkdir -p "${D}"/opt || die
 	cp -a "${P}" "${unity_dir}" || die
 	rm -r "${P}" || die
-	cp -a "${P}"-StandardAssets "${unity_dir}"/Editor/Standard\ Assets || die
-	rm -r "${P}"-StandardAssets || die
 	if use doc; then
 		cp -a "${P}"-doc/Documentation "${data_dir}"/Documentation || die
 		cp -a "${P}"-doc/Documentation.html "${data_dir}"/Documentation.html || die
 		rm -r "${P}"-doc || die
-	fi
-	if use examples; then
-		cp -a "${P}-examples/Standard Assets Example Project" \
-			"${unity_dir}/Standard Assets Example Project" || die
-		rm -r "${P}"-examples || die
 	fi
 	if use android; then
 		cp -a "${P}"-android "${engines_dir}"/AndroidPlayer || die
