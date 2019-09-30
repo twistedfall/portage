@@ -1,0 +1,27 @@
+diff -ur cppast.orig/CMakeLists.txt cppast/CMakeLists.txt
+--- cppast.orig/CMakeLists.txt	2019-09-30 10:36:09.872863730 +0200
++++ cppast/CMakeLists.txt	2019-09-30 10:39:59.108298551 +0200
+@@ -10,20 +10,20 @@
+ option(CPPAST_BUILD_EXAMPLE "whether or not to build the examples" OFF)
+ option(CPPAST_BUILD_TOOL "whether or not to build the tool" OFF)
+ 
+-if(${CPPAST_BUILD_TEST} OR (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
++if(${CPPAST_BUILD_TEST} AND (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
+     set(build_test ON)
+     set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for the self integration test
+ else()
+     set(build_test OFF)
+ endif()
+ 
+-if(${CPPAST_BUILD_EXAMPLE} OR (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
++if(${CPPAST_BUILD_EXAMPLE} AND (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
+     set(build_example ON)
+ else()
+     set(build_example OFF)
+ endif()
+ 
+-if(${CPPAST_BUILD_TOOL} OR (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
++if(${CPPAST_BUILD_TOOL} AND (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
+     set(build_tool ON)
+ else()
+     set(build_tool OFF)
