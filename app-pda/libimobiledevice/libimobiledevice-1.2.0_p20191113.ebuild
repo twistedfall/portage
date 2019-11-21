@@ -1,45 +1,55 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
-PYTHON_COMPAT=( python{2_7,3_4,3_5} )
-inherit eutils python-r1 git-r3
+EAPI=7
+PYTHON_COMPAT=( python{2_7,3_5,3_6} )
+
+inherit autotools python-r1
+
+HASH="af91dc6376946daffd5c9ece916d9f33af828890"
 
 DESCRIPTION="Support library to communicate with Apple iPhone/iPod Touch devices"
-HOMEPAGE="http://www.libimobiledevice.org/"
-EGIT_REPO_URI="https://github.com/libimobiledevice/libimobiledevice"
-EGIT_COMMIT="fb71aeef10488ed7b0e60a1c8a553193301428c0"
+HOMEPAGE="https://www.libimobiledevice.org/"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 
 # While COPYING* doesn't mention 'or any later version', all the headers do, hence use +
 LICENSE="GPL-2+ LGPL-2.1+"
-SLOT="0/6" # based on SONAME of libimobiledevice.so
-KEYWORDS="amd64 ~arm ~ppc ~ppc64 x86"
-IUSE="gnutls python static-libs"
 
-RDEPEND=">=app-pda/libplist-1.11:=
-	>=app-pda/libusbmuxd-1.0.9:=
+SLOT="0/6" # based on SONAME of libimobiledevice.so
+
+KEYWORDS="amd64 ~arm ~arm64 ppc ~ppc64 x86"
+IUSE="gnutls libressl python static-libs"
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
+RDEPEND="
+	>=app-pda/libplist-1.11:=
+	>=app-pda/libusbmuxd-1.1.0:=
 	gnutls? (
 		dev-libs/libgcrypt:0
 		>=dev-libs/libtasn1-1.1
-		>=net-libs/gnutls-2.2.0
-		)
-	!gnutls? ( dev-libs/openssl:0 )
+		>=net-libs/gnutls-2.2.0 )
+	!gnutls? (
+		!libressl? ( dev-libs/openssl:0= )
+		libressl? ( dev-libs/libressl:0= ) )
 	python? (
 		${PYTHON_DEPS}
-		app-pda/libplist[python(-),${PYTHON_USEDEP}]
-		)"
+		app-pda/libplist[python(-),${PYTHON_USEDEP}] )
+"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
-	python? ( >=dev-python/cython-0.17[${PYTHON_USEDEP}] )"
+	python? ( >=dev-python/cython-0.17[${PYTHON_USEDEP}] )
+"
 
-REQUIRED_USE="${PYTHON_REQUIRED_USE}"
-
-DOCS=( AUTHORS NEWS README )
-
+S="${WORKDIR}/${PN}-${HASH}"
 BUILD_DIR="${S}_build"
 
+PATCHES=(
+	"${FILESDIR}/9b857fc42cdc4921e1e3f190c5ea907774e04758.patch"
+)
+
 src_prepare() {
-	NOCONFIGURE=1 ./autogen.sh
+	default
+	eautoreconf
 }
 
 src_configure() {
@@ -95,5 +105,6 @@ src_install() {
 		insinto /usr/include/${PN}/cython
 		doins cython/imobiledevice.pxd
 	fi
-	prune_libtool_files --all
+
+	find "${D}" -name '*.la' -delete || die
 }

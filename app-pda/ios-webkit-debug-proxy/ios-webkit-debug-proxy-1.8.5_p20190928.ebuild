@@ -16,7 +16,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="app-pda/libimobiledevice
+RDEPEND=">=app-pda/libimobiledevice-1.2.0_p20191113
 	app-pda/usbmuxd
 	app-pda/libplist
 "
@@ -24,10 +24,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 S="${WORKDIR}/${PN}-${HASH}"
-
-PATCHES=(
-	"${FILESDIR}/libimobiledevice.patch"
-)
 
 src_prepare() {
 	default

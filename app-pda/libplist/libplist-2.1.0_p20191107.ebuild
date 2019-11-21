@@ -3,56 +3,38 @@
 
 EAPI=7
 PYTHON_COMPAT=( python{2_7,3_5,3_6} )
+inherit autotools eutils python-r1
 
-inherit autotools python-r1
+HASH="2.1.0"
 
-HASH="656b96ca6caac90eb78266bd1fabe7b76bcb8c03"
-
-DESCRIPTION="Support library to communicate with Apple iPhone/iPod Touch devices"
+DESCRIPTION="Support library to deal with Apple Property Lists (Binary & XML)"
 HOMEPAGE="https://www.libimobiledevice.org/"
 SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 
-# While COPYING* doesn't mention 'or any later version', all the headers do, hence use +
-LICENSE="GPL-2+ LGPL-2.1+"
+LICENSE="GPL-2 LGPL-2.1"
+SLOT="0/3.2.0" # based on SONAME of libplist.so
+KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~x86 ~amd64-fbsd"
+IUSE="python static-libs"
 
-SLOT="0/6" # based on SONAME of libimobiledevice.so
-
-KEYWORDS="amd64 ~arm ~arm64 ppc ~ppc64 x86"
-IUSE="gnutls libressl python static-libs"
-REQUIRED_USE="${PYTHON_REQUIRED_USE}"
-
-RDEPEND="
-	>=app-pda/libplist-1.11:=
-	>=app-pda/libusbmuxd-1.1.0:=
-	gnutls? (
-		dev-libs/libgcrypt:0
-		>=dev-libs/libtasn1-1.1
-		>=net-libs/gnutls-2.2.0 )
-	!gnutls? (
-		!libressl? ( dev-libs/openssl:0= )
-		libressl? ( dev-libs/libressl:0= ) )
-	python? (
-		${PYTHON_DEPS}
-		app-pda/libplist[python(-),${PYTHON_USEDEP}] )
-"
+RDEPEND="python? ( ${PYTHON_DEPS} )"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
-	python? ( >=dev-python/cython-0.17[${PYTHON_USEDEP}] )
-"
+	python? ( >=dev-python/cython-0.17[${PYTHON_USEDEP}] )"
+
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 S="${WORKDIR}/${PN}-${HASH}"
 BUILD_DIR="${S}_build"
 
 src_prepare() {
 	default
+
 	eautoreconf
 }
 
 src_configure() {
 	local ECONF_SOURCE=${S}
-
 	local myeconfargs=( $(use_enable static-libs static) )
-	use gnutls && myeconfargs+=( --disable-openssl )
 
 	do_configure() {
 		mkdir -p "${BUILD_DIR}" || die
@@ -62,7 +44,6 @@ src_configure() {
 	}
 
 	do_configure_python() {
-		# Bug 567916
 		PYTHON_LDFLAGS="$(python_get_LIBS)" do_configure "$@"
 	}
 
@@ -74,7 +55,7 @@ src_compile() {
 	python_compile() {
 		emake -C "${BUILD_DIR}"/cython -j1 \
 			VPATH="${S}/cython:${native_builddir}/cython" \
-			imobiledevice_la_LIBADD="${native_builddir}/src/libimobiledevice.la"
+			plist_la_LIBADD="${native_builddir}/src/libplist.la"
 	}
 
 	local native_builddir=${BUILD_DIR}
@@ -97,10 +78,11 @@ src_install() {
 	use python && python_foreach_impl python_install
 	popd >/dev/null || die
 
-	if use python; then
-		insinto /usr/include/${PN}/cython
-		doins cython/imobiledevice.pxd
-	fi
+	einstalldocs
 
+	if use python ; then
+		insinto /usr/include/plist/cython
+		doins cython/plist.pxd
+	fi
 	find "${D}" -name '*.la' -delete || die
 }
