@@ -21,11 +21,14 @@ MODULE_NAMES="evdi(video:${S}/module)"
 
 CONFIG_CHECK="~FB_VIRTUAL ~!INTEL_IOMMU"
 
+PATCHES=( "${FILESDIR}/0007-Fix-FTBFS-5.4.patch" )
+
 pkg_setup() {
 	linux-mod_pkg_setup
 }
 
 src_compile() {
+	export KVER=${KV_FULL}
 	linux-mod_src_compile
 	cd "${S}/library"
 	default
