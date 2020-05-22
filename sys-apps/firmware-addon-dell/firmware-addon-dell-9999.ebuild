@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=7
 
-inherit git-2
+inherit git-r3
 
 DESCRIPTION="firmware-tools plugin for Dell systems"
 HOMEPAGE="http://linux.dell.com/cgi-bin/gitweb/gitweb.cgi?p=${PN}.git;a=summary"

@@ -1,7 +1,7 @@
 
-EAPI=4
+EAPI=7
 
-inherit git-2
+inherit git-r3
 
 DESCRIPTION="FUSE and libmtp based filesystem for accessing MTP devices"
 HOMEPAGE="https://github.com/kiorky/jmtpfs"

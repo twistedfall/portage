@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=7
 
-inherit git-2 eutils
+inherit git-r3 eutils
 
 DESCRIPTION="Userspace controler for mbm-gpsd"
 HOMEPAGE="http://mbm.sourceforge.net/"

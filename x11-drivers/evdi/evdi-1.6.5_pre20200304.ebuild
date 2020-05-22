@@ -5,9 +5,10 @@ EAPI=6
 
 inherit linux-mod
 
+REV="b5c57910e4ef2b706249ddefd066f955e3899b8c"
 DESCRIPTION="Extensible Virtual Display Interface"
 HOMEPAGE="https://github.com/DisplayLink/evdi"
-SRC_URI="https://github.com/DisplayLink/evdi/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/DisplayLink/evdi/archive/$REV.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
@@ -17,9 +18,11 @@ RDEPEND="x11-libs/libdrm"
 DEPEND="${RDEPEND}
 	sys-kernel/linux-headers"
 
-MODULE_NAMES="evdi(video:${S}/module)"
-
 CONFIG_CHECK="~FB_VIRTUAL ~!INTEL_IOMMU"
+
+S="${WORKDIR}/evdi-$REV"
+
+MODULE_NAMES="evdi(video:${S}/module)"
 
 pkg_setup() {
 	linux-mod_pkg_setup

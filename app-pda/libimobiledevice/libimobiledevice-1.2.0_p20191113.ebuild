@@ -1,25 +1,25 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-PYTHON_COMPAT=( python{2_7,3_5,3_6} )
+
+COMMIT="af91dc6376946daffd5c9ece916d9f33af828890"
+PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit autotools python-r1
 
-HASH="af91dc6376946daffd5c9ece916d9f33af828890"
-
 DESCRIPTION="Support library to communicate with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${HASH}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://cgit.libimobiledevice.org/libimobiledevice.git/snapshot/libimobiledevice-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
 
 # While COPYING* doesn't mention 'or any later version', all the headers do, hence use +
 LICENSE="GPL-2+ LGPL-2.1+"
 
 SLOT="0/6" # based on SONAME of libimobiledevice.so
 
-KEYWORDS="amd64 ~arm ~arm64 ppc ~ppc64 x86"
-IUSE="gnutls libressl python static-libs"
-REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~x86"
+IUSE="doc gnutls libressl python static-libs"
+REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 RDEPEND="
 	>=app-pda/libplist-1.11:=
@@ -35,12 +35,18 @@ RDEPEND="
 		${PYTHON_DEPS}
 		app-pda/libplist[python(-),${PYTHON_USEDEP}] )
 "
-DEPEND="${RDEPEND}
+
+DEPEND="
+	${RDEPEND}
+"
+
+BDEPEND="
 	virtual/pkgconfig
+	doc? ( app-doc/doxygen )
 	python? ( >=dev-python/cython-0.17[${PYTHON_USEDEP}] )
 "
 
-S="${WORKDIR}/${PN}-${HASH}"
+S="${WORKDIR}/${PN}-${COMMIT}"
 BUILD_DIR="${S}_build"
 
 PATCHES=(
@@ -67,7 +73,8 @@ src_configure() {
 
 	do_configure_python() {
 		# Bug 567916
-		PYTHON_LDFLAGS="$(python_get_LIBS)" do_configure "$@"
+		local -x PYTHON_LDFLAGS="$(python_get_LIBS)"
+		do_configure "$@"
 	}
 
 	do_configure --without-cython
@@ -76,30 +83,29 @@ src_configure() {
 
 src_compile() {
 	python_compile() {
-		emake -C "${BUILD_DIR}"/cython -j1 \
-			VPATH="${S}/cython:${native_builddir}/cython" \
-			imobiledevice_la_LIBADD="${native_builddir}/src/libimobiledevice.la"
+		emake -C "${BUILD_DIR}"/cython \
+			VPATH="${S}/cython:$1/cython" \
+			imobiledevice_la_LIBADD="$1/src/libimobiledevice.la"
 	}
 
-	local native_builddir=${BUILD_DIR}
-	pushd "${BUILD_DIR}" >/dev/null || die
-	emake -j1
-	use python && python_foreach_impl python_compile
-	popd >/dev/null || die
+	emake -C "${BUILD_DIR}"
+	use python && python_foreach_impl python_compile "${BUILD_DIR}"
+
+	if use doc; then
+		doxygen "${BUILD_DIR}"/doxygen.cfg || die
+	fi
 }
 
 src_install() {
 	python_install() {
-		emake -C "${BUILD_DIR}/cython" -j1 \
-			VPATH="${S}/cython:${native_builddir}/cython" \
-			DESTDIR="${D}" install
+		emake -C "${BUILD_DIR}/cython" install \
+			DESTDIR="${D}" \
+			VPATH="${S}/cython:$1/cython"
 	}
 
-	local native_builddir=${BUILD_DIR}
-	pushd "${BUILD_DIR}" >/dev/null || die
-	emake -j1 DESTDIR="${D}" install
-	use python && python_foreach_impl python_install
-	popd >/dev/null || die
+	emake -C "${BUILD_DIR}" install DESTDIR="${D}"
+	use python && python_foreach_impl python_install "${BUILD_DIR}"
+	use doc && dodoc docs/html/*
 
 	if use python; then
 		insinto /usr/include/${PN}/cython

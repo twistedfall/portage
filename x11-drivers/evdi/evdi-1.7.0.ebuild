@@ -17,9 +17,11 @@ RDEPEND="x11-libs/libdrm"
 DEPEND="${RDEPEND}
 	sys-kernel/linux-headers"
 
-MODULE_NAMES="evdi(video:${S}/module)"
-
 CONFIG_CHECK="~FB_VIRTUAL ~!INTEL_IOMMU"
+
+S="${WORKDIR}/evdi-$REV"
+
+MODULE_NAMES="evdi(video:${S}/module)"
 
 pkg_setup() {
 	linux-mod_pkg_setup
