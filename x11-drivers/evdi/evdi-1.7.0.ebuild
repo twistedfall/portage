@@ -19,8 +19,6 @@ DEPEND="${RDEPEND}
 
 CONFIG_CHECK="~FB_VIRTUAL ~!INTEL_IOMMU"
 
-S="${WORKDIR}/evdi-$REV"
-
 MODULE_NAMES="evdi(video:${S}/module)"
 
 pkg_setup() {
