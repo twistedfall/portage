@@ -52,7 +52,8 @@ RDEPEND="
 	cuda? ( dev-util/nvidia-cuda-toolkit:0= )
 	contribhdf? ( sci-libs/hdf5:= )
 	contribsfm? ( sci-libs/ceres-solver )
-	ffmpeg? ( media-video/ffmpeg:0=[${MULTILIB_USEDEP}] )	gdal? ( sci-libs/gdal:= )
+	ffmpeg? ( media-video/ffmpeg:0=[${MULTILIB_USEDEP}] )
+	gdal? ( sci-libs/gdal:= )
 	gflags? ( dev-cpp/gflags[${MULTILIB_USEDEP}] )
 	glog? ( dev-cpp/glog[${MULTILIB_USEDEP}] )
 	gphoto2? ( media-libs/libgphoto2[${MULTILIB_USEDEP}] )
@@ -104,7 +105,7 @@ DEPEND="${RDEPEND}
 	vaapi? ( x11-libs/libva )"
 BDEPEND="
 	java? ( >=virtual/jdk-1.6 )
-	virtual/pkgconfig[${MULTILIB_USEDEP}]"
+	virtual/pkgconfig"
 
 MULTILIB_WRAPPED_HEADERS=(
 	/usr/include/opencv2/cvconfig.h
