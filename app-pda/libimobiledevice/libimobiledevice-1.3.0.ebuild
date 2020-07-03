@@ -2,15 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-
-COMMIT="af91dc6376946daffd5c9ece916d9f33af828890"
 PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit autotools python-r1
 
 DESCRIPTION="Support library to communicate with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://cgit.libimobiledevice.org/libimobiledevice.git/snapshot/libimobiledevice-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
+SRC_URI="https://www.libimobiledevice.org/downloads/${P}.tar.bz2"
 
 # While COPYING* doesn't mention 'or any later version', all the headers do, hence use +
 LICENSE="GPL-2+ LGPL-2.1+"
@@ -22,8 +20,8 @@ IUSE="doc gnutls libressl python static-libs"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 RDEPEND="
-	>=app-pda/libplist-1.11:=
-	>=app-pda/libusbmuxd-1.1.0:=
+	>=app-pda/libplist-2.0:=
+	>=app-pda/libusbmuxd-2.0:=
 	gnutls? (
 		dev-libs/libgcrypt:0
 		>=dev-libs/libtasn1-1.1
@@ -36,9 +34,7 @@ RDEPEND="
 		app-pda/libplist[python(-),${PYTHON_USEDEP}] )
 "
 
-DEPEND="
-	${RDEPEND}
-"
+DEPEND="${RDEPEND}"
 
 BDEPEND="
 	virtual/pkgconfig
@@ -46,12 +42,7 @@ BDEPEND="
 	python? ( >=dev-python/cython-0.17[${PYTHON_USEDEP}] )
 "
 
-S="${WORKDIR}/${PN}-${COMMIT}"
 BUILD_DIR="${S}_build"
-
-PATCHES=(
-	"${FILESDIR}/9b857fc42cdc4921e1e3f190c5ea907774e04758.patch"
-)
 
 src_prepare() {
 	default
@@ -85,7 +76,7 @@ src_compile() {
 	python_compile() {
 		emake -C "${BUILD_DIR}"/cython \
 			VPATH="${S}/cython:$1/cython" \
-			imobiledevice_la_LIBADD="$1/src/libimobiledevice.la"
+			imobiledevice_la_LIBADD="$1/src/libimobiledevice-1.0.la"
 	}
 
 	emake -C "${BUILD_DIR}"
@@ -107,6 +98,7 @@ src_install() {
 	use python && python_foreach_impl python_install "${BUILD_DIR}"
 	use doc && dodoc docs/html/*
 
+	dodoc docs/html/*
 	if use python; then
 		insinto /usr/include/${PN}/cython
 		doins cython/imobiledevice.pxd

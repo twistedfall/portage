@@ -5,9 +5,11 @@ EAPI=7
 
 inherit autotools
 
+HASH="6d499e016fe3f8db982dad8bb9297c5b0969e576"
+
 DESCRIPTION="A DevTools proxy (Chrome Remote Debugging Protocol) for iOS devices (Safari Remote Web Inspector)."
 HOMEPAGE="https://github.com/google/ios-webkit-debug-proxy"
-SRC_URI="https://github.com/google/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/google/${PN}/archive/${HASH}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
@@ -20,6 +22,8 @@ RDEPEND=">=app-pda/libimobiledevice-1.2.0_p20191113
 "
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
+
+S="${WORKDIR}/${PN}-${HASH}"
 
 src_prepare() {
 	default
