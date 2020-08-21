@@ -66,11 +66,11 @@ main()
 
 start_service()
 {
-  service dlm start
+  systemctl start dlm
 }
 
 stop_service()
 {
-  service dlm stop
+  systemctl stop dlm
 }
 main $1 $2
