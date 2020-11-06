@@ -7,7 +7,8 @@ inherit linux-mod
 
 DESCRIPTION="Extensible Virtual Display Interface"
 HOMEPAGE="https://github.com/DisplayLink/evdi"
-SRC_URI="https://github.com/DisplayLink/evdi/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+REV="90e9679591daf2d1d57bc8d7fa7d717cce62c933"
+SRC_URI="https://github.com/DisplayLink/evdi/archive/${REV}.zip -> ${P}.zip"
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
@@ -17,11 +18,13 @@ RDEPEND="x11-libs/libdrm"
 DEPEND="${RDEPEND}
 	sys-kernel/linux-headers"
 
-MODULE_NAMES="evdi(video:${S}/module)"
-
 CONFIG_CHECK="~FB_VIRTUAL ~!INTEL_IOMMU"
 
-PATCHES=( "${FILESDIR}/0007-Fix-FTBFS-5.4.patch" )
+PATCHES=( "${FILESDIR}/kernel-5.10.patch" )
+
+S="${WORKDIR}/${PN}-${REV}"
+
+MODULE_NAMES="evdi(video:${S}/module)"
 
 pkg_setup() {
 	linux-mod_pkg_setup
