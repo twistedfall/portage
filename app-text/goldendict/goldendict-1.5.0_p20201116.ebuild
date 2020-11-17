@@ -1,34 +1,36 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 MY_PV=${PV^^}
 MY_PV=${MY_PV/_/-}
-inherit eutils qmake-utils git-r3
+inherit desktop qmake-utils
 
 DESCRIPTION="Feature-rich dictionary lookup program"
 HOMEPAGE="http://goldendict.org/"
-
-EGIT_REPO_URI="https://github.com/goldendict/goldendict"
-EGIT_COMMIT="6d46fd15299657860ebaedf856494de0fdfdc756"
+REV="8364b04dc0bf17b9f4490f1bc2fa3b410aad094a"
+SRC_URI="https://github.com/goldendict/goldendict/archive/${REV}.zip -> ${P}.zip"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE="debug ffmpeg libav"
+IUSE="cjk debug ffmpeg"
 
 RDEPEND="
 	app-arch/bzip2
-	>=app-text/hunspell-1.2:=
+	>=app-text/hunspell-1.5:=
 	dev-libs/eb
 	dev-libs/lzo
 	dev-qt/qtcore:5
+	dev-qt/qtdeclarative:5
 	dev-qt/qtgui:5
 	dev-qt/qthelp:5
+	dev-qt/qtmultimedia:5
 	dev-qt/qtnetwork:5
 	dev-qt/qtprintsupport:5
-	dev-qt/qtsingleapplication[qt5(+)]
+	dev-qt/qtsingleapplication[qt5(+),X]
+	dev-qt/qtsql:5
 	dev-qt/qtsvg:5
 	dev-qt/qtwebkit:5
 	dev-qt/qtwidgets:5
@@ -39,20 +41,26 @@ RDEPEND="
 	sys-libs/zlib
 	x11-libs/libX11
 	x11-libs/libXtst
+	cjk? (
+		app-i18n/opencc
+	)
 	ffmpeg? (
 		media-libs/libao
-		libav? ( media-video/libav:0= )
-		!libav? ( media-video/ffmpeg:0= )
+		media-video/ffmpeg:0=
 	)
 "
-DEPEND="${RDEPEND}
+DEPEND="${RDEPEND}"
+BDEPEND="
 	dev-qt/linguist-tools:5
 	virtual/pkgconfig
 "
 
-PATCHES=( "${FILESDIR}/${PN}-1.5.0-qtsingleapplication-unbundle.patch" )
+PATCHES=(
+	"${FILESDIR}/${PN}-1.5.0-qtsingleapplication-unbundle.patch"
+	"${FILESDIR}/goldendict-xdg.patch"
+)
 
-#S="${WORKDIR}/${PN}-${MY_PV}"
+S="${WORKDIR}/${PN}-${REV}"
 
 src_prepare() {
 	default
@@ -73,12 +81,10 @@ src_prepare() {
 
 src_configure() {
 	local myconf=()
+	use ffmpeg || myconf+=( CONFIG+=no_ffmpeg_player )
+	use cjk && myconf+=( CONFIG+=chinese_conversion_support )
 
-	if ! use ffmpeg ; then
-		myconf+=( DISABLE_INTERNAL_PLAYER=1 )
-	fi
-
-	eqmake5 "${myconf[@]}"
+	eqmake5 "${myconf[@]}" goldendict.pro
 }
 
 src_install() {
