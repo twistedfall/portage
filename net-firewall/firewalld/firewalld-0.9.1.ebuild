@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{6,7} )
+PYTHON_COMPAT=( python3_{6,7,8,9} )
 inherit autotools bash-completion-r1 gnome2-utils l10n linux-info python-single-r1 systemd xdg-utils
 
 DESCRIPTION="A firewall daemon with D-BUS interface providing a dynamic firewall"
@@ -43,7 +43,9 @@ DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.35
 	sys-devel/gettext"
 
-PLOCALES="ar as bg bn_IN ca cs da de el en_GB en_US es et eu fi fr gl gu hi hu ia id it ja ka kn ko lt ml mr nl or pa pl pt pt_BR ru sk sq sr sr@latin sv ta te tr uk zh_CN zh_TW"
+RESTRICT="test" # bug 650760
+
+PLOCALES="ar as ast bg bn_IN ca cs da de el en_GB en_US es et eu fa fi fr gl gu hi hu ia id it ja ka kn ko lt ml mr nl or pa pl pt pt_BR ru sk sq sr sr@latin sv ta te tr uk zh_CN zh_TW"
 
 PATCHES=( "${FILESDIR}/icmp-types-legacy.patch" "${FILESDIR}/nftables-init-order.patch" )
 
@@ -71,6 +73,7 @@ src_configure() {
 
 	local econf_args=(
 		--enable-systemd
+		$(use_with nftables nft "${EPREFIX}/sbin/nft")
 		$(use_with iptables iptables "${EPREFIX}/sbin/iptables")
 		$(use_with iptables iptables_restore "${EPREFIX}/sbin/iptables-restore")
 		$(use_with iptables ip6tables "${EPREFIX}/sbin/ip6tables")
@@ -90,6 +93,7 @@ src_install() {
 	python_optimize
 
 	# Get rid of junk
+	rm -rf "${D}/etc/rc.d/" || die
 	rm -rf "${D}/etc/sysconfig/" || die
 
 	# For non-gui installs we need to remove GUI bits

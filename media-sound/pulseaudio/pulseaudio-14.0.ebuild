@@ -1,13 +1,12 @@
 # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
-inherit autotools bash-completion-r1 flag-o-matic gnome2-utils git-r3 linux-info systemd user udev multilib-minimal
+EAPI=7
+inherit autotools bash-completion-r1 flag-o-matic gnome2-utils linux-info systemd toolchain-funcs udev multilib-minimal
 
 DESCRIPTION="A networked sound server with an advanced plugin system"
 HOMEPAGE="https://www.freedesktop.org/wiki/Software/PulseAudio/"
-EGIT_REPO_URI="https://github.com/pulseaudio/pulseaudio"
-EGIT_COMMIT="7f4d7fcf5f6407913e50604c6195d0d5356195b1"
+SRC_URI="https://freedesktop.org/software/pulseaudio/releases/${P}.tar.xz"
 
 # libpulse-simple and libpulse link to libpulse-core; this is daemon's
 # library and can link to gdbm and other GPL-only libraries. In this
@@ -16,7 +15,7 @@ EGIT_COMMIT="7f4d7fcf5f6407913e50604c6195d0d5356195b1"
 LICENSE="!gdbm? ( LGPL-2.1 ) gdbm? ( GPL-2 )"
 
 SLOT="0"
-KEYWORDS="~alpha amd64 arm arm64 ~hppa ~ia64 ppc ppc64 sparc x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-linux ~x86-linux"
 
 # +alsa-plugin as discussed in bug #519530
 IUSE="+alsa +alsa-plugin +asyncns bluetooth +caps dbus doc equalizer elogind gconf
@@ -37,7 +36,7 @@ REQUIRED_USE="
 "
 
 # libpcre needed in some cases, bug #472228
-CDEPEND="
+RDEPEND="
 	|| (
 		elibc_glibc? ( virtual/libc )
 		elibc_uclibc? ( virtual/libc )
@@ -83,25 +82,16 @@ CDEPEND="
 	systemd? ( sys-apps/systemd:0=[${MULTILIB_USEDEP}] )
 	dev-libs/libltdl:0
 	selinux? ( sec-policy/selinux-pulseaudio )
-" # libltdl is a valid RDEPEND, libltdl.so is used for native abi in pulsecore and daemon
-
-RDEPEND="${CDEPEND}
 	realtime? ( sys-auth/rtkit )
 	gconf? ( >=gnome-base/gconf-3.2.6 )
-"
+" # libltdl is a valid RDEPEND, libltdl.so is used for native abi in pulsecore and daemon
 
 DEPEND="${RDEPEND}
-	sys-devel/m4
-	doc? ( app-doc/doxygen )
-	test? ( >=dev-libs/check-0.9.10 )
 	X? (
 		x11-base/xorg-proto
 		>=x11-libs/libXtst-1.0.99.2[${MULTILIB_USEDEP}]
 	)
 	dev-libs/libatomic_ops
-	virtual/pkgconfig
-	system-wide? ( dev-util/unifdef )
-	>=sys-devel/gettext-0.19.3
 "
 # This is a PDEPEND to avoid a circular dep
 PDEPEND="
@@ -116,12 +106,20 @@ RDEPEND="${RDEPEND}
 	system-wide? (
 		alsa? ( media-sound/alsa-utils )
 		bluetooth? ( >=net-wireless/bluez-5 )
+		acct-user/pulse
+		acct-group/pulse-access
 	)
+	acct-group/audio
 "
 
-#PATCHES=(
-#	"${FILESDIR}"/pulseaudio-11.1-disable-flat-volumes.patch # bug 627894
-#)
+BDEPEND="
+	doc? ( app-doc/doxygen )
+	system-wide? ( dev-util/unifdef )
+	test? ( >=dev-libs/check-0.9.10 )
+	sys-devel/gettext
+	sys-devel/m4
+	virtual/pkgconfig
+"
 
 pkg_pretend() {
 	CONFIG_CHECK="~HIGH_RES_TIMERS"
@@ -140,19 +138,10 @@ pkg_pretend() {
 pkg_setup() {
 	linux-info_pkg_setup
 	gnome2_environment_reset #543364
-
-	enewgroup audio 18 # Just make sure it exists
-
-	if use system-wide; then
-		enewgroup pulse-access
-		enewgroup pulse
-		enewuser pulse -1 -1 /var/run/pulse pulse,audio
-	fi
 }
 
 src_prepare() {
 	default
-	eautoreconf
 
 	# Skip test that cannot work with sandbox, bug #501846
 	sed -i -e '/lock-autospawn-test /d' src/Makefile.am || die
@@ -204,10 +193,11 @@ multilib_src_configure() {
 	)
 
 	if use elogind && multilib_is_native_abi; then
+		local PKGCONFIG="$(tc-getPKG_CONFIG)"
 		myconf+=(
 			--enable-systemd-login
-			SYSTEMDLOGIN_CFLAGS=`pkg-config --cflags "libelogind" 2>/dev/null`
-			SYSTEMDLOGIN_LIBS=`pkg-config --libs "libelogind" 2>/dev/null`
+			SYSTEMDLOGIN_CFLAGS="$(${PKGCONFIG} --cflags "libelogind" 2>/dev/null)"
+			SYSTEMDLOGIN_LIBS="$(${PKGCONFIG} --libs "libelogind" 2>/dev/null)"
 		)
 	fi
 
@@ -302,19 +292,16 @@ multilib_src_install_all() {
 	else
 		# Prevent warnings when system-wide is not used, bug #447694
 		if use dbus ; then
-			rm "${ED%/}"/etc/dbus-1/system.d/pulseaudio-system.conf || die
+			rm "${ED}"/etc/dbus-1/system.d/pulseaudio-system.conf || die
 		fi
 	fi
 
 	if use zeroconf ; then
 		sed -e '/module-zeroconf-publish/s:^#::' \
-			-i "${ED%/}/etc/pulse/default.pa" || die
+			-i "${ED}/etc/pulse/default.pa" || die
 	fi
 
 	dodoc NEWS README todo
-
-	# Create the state directory
-	use prefix || diropts -o pulse -g pulse -m0755
 
 	find "${ED}" \( -name '*.a' -o -name '*.la' \) -delete || die
 }
