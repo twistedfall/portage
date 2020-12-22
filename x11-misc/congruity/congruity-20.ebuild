@@ -4,7 +4,7 @@
 
 EAPI=5
 PYTHON_COMPAT=( python2_7 )
-inherit python-single-r1 fdo-mime
+inherit python-single-r1 xdg-utils
 
 DESCRIPTION="GUI application for programming Logitech Harmony"
 HOMEPAGE="http://sourceforge.net/projects/congruity"
@@ -32,5 +32,5 @@ src_install() {
 }
 
 pkg_postinst() {
-	fdo-mime_desktop_database_update
+	xdg_desktop_database_update
 }

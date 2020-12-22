@@ -10,7 +10,7 @@ HOMEPAGE="https://unity3d.com/"
 # https://unity3d.com/unity/whats-new/2018.4.12
 
 MY_PV="${PV/_p/}"
-HASH="81610f64359c"
+HASH="225e826a680e"
 SRC_URI_BASE="https://beta.unity3d.com/download/${HASH}"
 SRC_URI="
 	${SRC_URI_BASE}/LinuxEditorInstaller/Unity.tar.xz
@@ -62,7 +62,7 @@ RDEPEND="
 	webgl? (
 		app-arch/gzip
 		net-libs/nodejs[npm]
-		virtual/ffmpeg
+		media-video/ffmpeg
 		virtual/jre
 	)
 "

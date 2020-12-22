@@ -35,7 +35,7 @@ S="${WORKDIR}/${PN}-v${PV}"
 src_prepare() {
 	default
 	if use tod-1; then
-		eapply "${FILESDIR}/tod-52410c3310ca41e45de68b5bb1393398b38d0850.patch"
+		eapply "${FILESDIR}/tod-1.90.6-4b675a069171eea3adbbfec1f0cf1270e60ec550.patch"
 	fi
 }
 
