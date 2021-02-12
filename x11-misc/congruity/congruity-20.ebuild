@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-PYTHON_COMPAT=( python2_7 )
+PYTHON_COMPAT=( python{3_7,3_8,3_9} )
 inherit python-single-r1 xdg-utils
 
 DESCRIPTION="GUI application for programming Logitech Harmony"

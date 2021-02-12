@@ -4,7 +4,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} )
+PYTHON_COMPAT=( python{3_7,3_8,3_9} )
 inherit eutils autotools python-r1
 
 MY_P="concordance-${PV}"
