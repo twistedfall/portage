@@ -7,10 +7,10 @@ inherit check-reqs desktop eutils unpacker xdg
 
 DESCRIPTION="Editor to create games on the Unity engine"
 HOMEPAGE="https://unity3d.com/"
-# https://unity3d.com/unity/whats-new/2018.4.12
+# https://unity3d.com/unity/whats-new/2019.4.22
 
 MY_PV="${PV/_p/}"
-HASH="50fe8a171dd9"
+HASH="9fdda2fe27ad"
 SRC_URI_BASE="https://beta.unity3d.com/download/${HASH}"
 SRC_URI="
 	${SRC_URI_BASE}/LinuxEditorInstaller/Unity.tar.xz
