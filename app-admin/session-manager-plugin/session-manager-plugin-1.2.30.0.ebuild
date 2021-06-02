@@ -13,7 +13,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="systemd"
 
-RDEPEND=">=dev-python/awscli-1.16.12"
+RDEPEND=">=app-admin/awscli-1.16.12"
 
 S="${WORKDIR}"
 
