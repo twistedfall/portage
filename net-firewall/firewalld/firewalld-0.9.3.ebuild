@@ -1,4 +1,4 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -45,7 +45,7 @@ DEPEND="${RDEPEND}
 
 RESTRICT="test" # bug 650760
 
-PLOCALES="ar as ast bg bn_IN ca cs da de el en_GB en_US es et eu fa fi fr gl gu hi hu ia id it ja ka kn ko lt ml mr nl or pa pl pt pt_BR ru sk sq sr sr@latin sv ta te tr uk zh_CN zh_TW"
+PLOCALES="ar as bg bn_IN ca cs da de el en_GB en_US es et eu fi fr gl gu hi hu ia id it ja ka kn ko lt ml mr nl or pa pl pt pt_BR ru sk sq sr sr@latin sv ta te tr uk zh_CN zh_TW"
 
 PATCHES=( "${FILESDIR}/icmp-types-legacy.patch" "${FILESDIR}/nftables-init-order.patch" )
 
