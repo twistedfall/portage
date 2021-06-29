@@ -20,8 +20,6 @@ DEPEND="${RDEPEND}
 
 CONFIG_CHECK="~FB_VIRTUAL ~!INTEL_IOMMU"
 
-PATCHES=( "${FILESDIR}/kernel-5.10.patch" )
-
 S="${WORKDIR}/${PN}-${REV}"
 
 MODULE_NAMES="evdi(video:${S}/module)"

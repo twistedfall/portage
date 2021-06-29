@@ -7,7 +7,7 @@ inherit linux-mod
 
 DESCRIPTION="Extensible Virtual Display Interface"
 HOMEPAGE="https://github.com/DisplayLink/evdi"
-REV="90e9679591daf2d1d57bc8d7fa7d717cce62c933"
+REV="65e12fca334f2f42396f4e8d16592d53cab34dd6"
 SRC_URI="https://github.com/DisplayLink/evdi/archive/${REV}.zip -> ${P}.zip"
 
 LICENSE="GPL-2 LGPL-2.1"
@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}
 
 CONFIG_CHECK="~FB_VIRTUAL ~!INTEL_IOMMU"
 
-PATCHES=( "${FILESDIR}/kernel-5.10.patch" )
+PATCHES=( "${FILESDIR}/kernel-5.13.patch" )
 
 S="${WORKDIR}/${PN}-${REV}"
 
