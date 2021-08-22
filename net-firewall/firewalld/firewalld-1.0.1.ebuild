@@ -3,8 +3,8 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{7,8,9} )
-inherit autotools bash-completion-r1 gnome2-utils l10n linux-info python-single-r1 systemd xdg-utils
+PYTHON_COMPAT=( python3_{8,9,10} )
+inherit autotools bash-completion-r1 gnome2-utils linux-info plocale python-single-r1 systemd xdg-utils
 
 DESCRIPTION="A firewall daemon with D-BUS interface providing a dynamic firewall"
 HOMEPAGE="http://www.firewalld.org/"
@@ -12,40 +12,42 @@ SRC_URI="https://github.com/${PN}/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="~amd64 ~arm64 ~ppc64 ~x86"
+KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~riscv ~x86"
 IUSE="gui systemd +nftables +iptables"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 RDEPEND="${PYTHON_DEPS}
-        !!net-firewall/gshield
-        nftables? ( net-firewall/nftables[python,json] )
-        iptables? (
-                net-firewall/iptables[ipv6]
-                net-firewall/ebtables
-                net-firewall/ipset
-                nftables? ( net-firewall/nftables[xtables(+)] )
-        )
-        || ( >=sys-apps/openrc-0.11.5 sys-apps/systemd )
-        $(python_gen_cond_dep '
-		iptables? ( dev-python/python-iptables[${PYTHON_MULTI_USEDEP}] )
-		dev-python/dbus-python[${PYTHON_MULTI_USEDEP}]
-                dev-python/decorator[${PYTHON_MULTI_USEDEP}]
-                >=dev-python/python-slip-0.2.7[dbus,${PYTHON_MULTI_USEDEP}]
-                dev-python/pygobject:3[${PYTHON_MULTI_USEDEP}]
-                gui? (
-                        x11-libs/gtk+:3
-                        dev-python/PyQt5[gui,widgets,${PYTHON_MULTI_USEDEP}]
-                )
-        ')"
-
+	!!net-firewall/gshield
+	iptables? (
+		net-firewall/iptables[ipv6]
+		net-firewall/ebtables
+		net-firewall/ipset
+		nftables? ( net-firewall/nftables[xtables(+)] )
+	)
+	|| ( >=sys-apps/openrc-0.11.5 sys-apps/systemd )
+	$(python_gen_cond_dep '
+		iptables? ( dev-python/python-iptables[${PYTHON_USEDEP}] )
+		dev-python/dbus-python[${PYTHON_USEDEP}]
+		dev-python/pygobject:3[${PYTHON_USEDEP}]
+		gui? (
+			x11-libs/gtk+:3
+			dev-python/PyQt5[gui,widgets,${PYTHON_USEDEP}]
+		)
+		nftables? ( >=net-firewall/nftables-0.9.4[python,json] )
+	')"
 DEPEND="${RDEPEND}
-	dev-libs/glib:2
-	>=dev-util/intltool-0.35
+	dev-libs/glib:2"
+BDEPEND=">=dev-util/intltool-0.35
 	sys-devel/gettext"
 
 RESTRICT="test" # bug 650760
 
-PLOCALES="ar as bg bn_IN ca cs da de el en_GB en_US es et eu fi fr gl gu hi hu ia id it ja ka kn ko lt ml mr nl or pa pl pt pt_BR ru sk sq sr sr@latin sv ta te tr uk zh_CN zh_TW"
+# Testsuite's Makefile.am calls missing(!)
+# ... but this seems to be consistent with the autoconf docs?
+# Needs more investigation: https://www.gnu.org/software/autoconf/manual/autoconf-2.67/html_node/autom4te-Invocation.html
+QA_AM_MAINTAINER_MODE=".*--run autom4te --language=autotest.*"
+
+PLOCALES="ar as ast bg bn_IN ca cs da de el en_GB en_US es et eu fa fi fr gl gu hi hu ia id it ja ka kn ko lt ml mr nl or pa pl pt pt_BR ru si sk sq sr sr@latin sv ta te tr uk zh_CN zh_TW"
 
 PATCHES=( "${FILESDIR}/icmp-types-legacy.patch" "${FILESDIR}/nftables-init-order.patch" )
 
@@ -62,10 +64,11 @@ pkg_setup() {
 
 src_prepare() {
 	default
+
 	eautoreconf
 
-	l10n_find_plocales_changes "po" "" ".po"
-	l10n_get_locales | sed -e 's/ /\n/g' > po/LINGUAS
+	plocale_find_changes "po" "" ".po"
+	plocale_get_locales | sed -e 's/ /\n/g' > po/LINGUAS
 }
 
 src_configure() {
@@ -85,6 +88,7 @@ src_configure() {
 		--with-bashcompletiondir="$(get_bashcompdir)"
 		--disable-sysconfig
 	)
+
 	econf "${econf_args[@]}"
 }
 
@@ -106,7 +110,7 @@ src_install() {
 	fi
 
 	if ! use systemd; then
-		 newinitd "${FILESDIR}"/firewalld.init firewalld
+		newinitd "${FILESDIR}"/firewalld.init firewalld
 	fi
 }
 
