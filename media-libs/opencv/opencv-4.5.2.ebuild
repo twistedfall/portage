@@ -1,9 +1,9 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{6,7,8,9} )
+PYTHON_COMPAT=( python3_{7,8,9} )
 CMAKE_ECLASS=cmake
 inherit java-pkg-opt-2 java-ant-2 cmake-multilib python-r1 toolchain-funcs
 
@@ -111,7 +111,7 @@ RDEPEND="
 		media-libs/libdc1394:=[${MULTILIB_USEDEP}]
 		sys-libs/libraw1394[${MULTILIB_USEDEP}]
 	)
-	java? ( >=virtual/jre-1.6:* )
+	java? ( >=virtual/jre-1.8:* )
 	jpeg? ( virtual/jpeg:0[${MULTILIB_USEDEP}] )
 	jpeg2k? ( media-libs/openjpeg:2=[${MULTILIB_USEDEP}] )
 	lapack? (
@@ -154,7 +154,7 @@ DEPEND="${RDEPEND}
 			<dev-cpp/eigen-3.3.8:3
 		)
 	)
-	java? ( >=virtual/jdk-1.6 )"
+	java? ( >=virtual/jdk-1.8:* )"
 BDEPEND="virtual/pkgconfig"
 
 MULTILIB_WRAPPED_HEADERS=(
