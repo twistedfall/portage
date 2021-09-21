@@ -2,16 +2,14 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
+PLOCALES="ar_SA ay_WI be_BY be_BY@latin bg_BG cs_CZ de_DE el_GR eo_EO es_AR es_BO es_ES fa_IR fi_FI fr_FR hi_IN ie_001 it_IT ja_JP jb_JB ko_KR lt_LT mk_MK nl_NL pl_PL pt_BR qt_es qt_it qt_lt qu_WI ru_RU sk_SK sq_AL sr_SR sv_SE tg_TJ tk_TM tr_TR uk_UA vi_VN zh_CN zh_TW"
 
-MY_PV=${PV^^}
-MY_PV=${MY_PV/_/-}
-inherit desktop qmake-utils git-r3
+inherit desktop qmake-utils plocale
 
 DESCRIPTION="Feature-rich dictionary lookup program"
 HOMEPAGE="http://goldendict.org/"
-
-EGIT_REPO_URI="https://github.com/goldendict/goldendict"
-EGIT_COMMIT="a378acc0df33ff33f6f961b706894559bc5849b0"
+REV="baff02a14b3f70f0d0a55bef550dbb74dcbf0ce8"
+SRC_URI="https://github.com/goldendict/goldendict/archive/${REV}.zip -> ${P}.zip"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -61,21 +59,30 @@ PATCHES=(
 	"${FILESDIR}/goldendict-xdg.patch"
 )
 
+S="${WORKDIR}/${PN}-${REV}"
+
 src_prepare() {
 	default
 
 	# disable git
-	sed -i \
-		-e '/git describe/s/^/#/' \
-		${PN}.pro || die
+	sed -i -e '/git describe/s/^/#/' ${PN}.pro || die
 
 	# fix installation path
-	sed -i \
-		-e '/PREFIX = /s:/usr/local:/usr:' \
-		${PN}.pro || die
+	sed -i -e '/PREFIX = /s:/usr/local:/usr:' ${PN}.pro || die
 
 	# add trailing semicolon
-	sed -i -e '/^Categories/s/$/;/' redist/${PN}.desktop || die
+	sed -i -e '/^Categories/s/$/;/' redist/org.${PN}.GoldenDict.desktop || die
+
+	echo "QMAKE_CXXFLAGS_RELEASE = $CXXFLAGS" >> ${PN}.pro
+	echo "QMAKE_CFLAGS_RELEASE = $CFLAGS" >> ${PN}.pro
+
+	local loc_dir="${S}/locale"
+	plocale_find_changes "${loc_dir}" "" ".ts"
+	rm_loc() {
+		rm -vf "locale/${1}.ts" || die
+		sed -i "/${1}.ts/d" ${PN}.pro || die
+	}
+	plocale_for_each_disabled_locale rm_loc
 }
 
 src_configure() {
@@ -83,17 +90,21 @@ src_configure() {
 	use ffmpeg || myconf+=( CONFIG+=no_ffmpeg_player )
 	use cjk && myconf+=( CONFIG+=chinese_conversion_support )
 
-	eqmake5 "${myconf[@]}" goldendict.pro
+	eqmake5 "${myconf[@]}" ${PN}.pro
+}
+
+install_locale() {
+	insinto /usr/share/apps/${PN}/locale
+	doins "${S}"/locale/${1}.qm
+	eend $? || die "failed to install $1 locale"
 }
 
 src_install() {
 	dobin ${PN}
-	domenu redist/${PN}.desktop
+	domenu redist/org.${PN}.GoldenDict.desktop
 	doicon redist/icons/${PN}.png
 
-	insinto /usr/share/apps/${PN}/locale
-	doins locale/*.qm
-
 	insinto /usr/share/${PN}/help
-	doins help/*.qch
+	doins help/gdhelp_en.qch
+	l10n_for_each_locale_do install_locale
 }
