@@ -3,12 +3,13 @@
 
 EAPI=7
 
+COMMIT="e3a3180b9b380ce9092ee0d7b8e9d82d66b1c261"
+
 inherit autotools systemd udev
 
-REV="b1a7c7ebf110aece7175b0c4d032608a00a7b55b"
 DESCRIPTION="USB multiplex daemon for use with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://github.com/libimobiledevice/${PN}/archive/$REV.zip -> ${P}.zip"
+SRC_URI="https://cgit.libimobiledevice.org/${PN}.git/snapshot/${PN}-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
 
 # src/utils.h is LGPL-2.1+, rest is found in COPYING*
 LICENSE="GPL-2 GPL-3 LGPL-2.1+"
@@ -18,6 +19,7 @@ IUSE="systemd"
 
 DEPEND="
 	acct-user/usbmux
+	app-pda/libimobiledevice-glue
 	>=app-pda/libimobiledevice-1.3.0:=
 	>=app-pda/libplist-2.2:=
 	virtual/libusb:1"
@@ -31,7 +33,7 @@ BDEPEND="
 	virtual/pkgconfig
 "
 
-S="${WORKDIR}/${PN}-$REV"
+S="${WORKDIR}/${PN}-${COMMIT}"
 
 src_prepare() {
 	default

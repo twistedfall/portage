@@ -1,44 +1,45 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
-PYTHON_COMPAT=( python3_{8,9} )
+
+COMMIT="b3d35fbcf7a1ac669c2e80fbd58920941a5d4c0c"
+
+PYTHON_COMPAT=( python3_{7,8,9} )
 
 inherit autotools python-r1
 
-REV="4837527745d98b9314eec1a250e2e13ce1ec3031"
 DESCRIPTION="Support library to communicate with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://github.com/libimobiledevice/${PN}/archive/$REV.zip -> ${P}.zip"
+SRC_URI="https://cgit.libimobiledevice.org/${PN}.git/snapshot/${PN}-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
 
 # While COPYING* doesn't mention 'or any later version', all the headers do, hence use +
 LICENSE="GPL-2+ LGPL-2.1+"
-
 SLOT="0/1.0-6" # based on SONAME of libimobiledevice-1.0.so
-
-KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~x86"
-IUSE="doc gnutls libressl python static-libs"
+KEYWORDS="amd64 ~arm ~arm64 ppc ~ppc64 ~riscv x86"
+IUSE="doc gnutls python static-libs"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 RDEPEND="
+	app-pda/libimobiledevice-glue
 	>=app-pda/libplist-2.2.0:=
 	>=app-pda/libusbmuxd-2.0.2:=
 	gnutls? (
 		dev-libs/libgcrypt:0
 		>=dev-libs/libtasn1-1.1
-		>=net-libs/gnutls-2.2.0 )
+		>=net-libs/gnutls-2.2.0
+	)
 	!gnutls? (
-		!libressl? ( dev-libs/openssl:0= )
-		libressl? ( dev-libs/libressl:0= ) )
+		dev-libs/openssl:0=
+	)
 	python? (
 		${PYTHON_DEPS}
-		app-pda/libplist[python(-),${PYTHON_USEDEP}] )
+		app-pda/libplist[python(-),${PYTHON_USEDEP}]
+	)
 "
-
 DEPEND="
 	${RDEPEND}
 "
-
 BDEPEND="
 	virtual/pkgconfig
 	doc? ( app-doc/doxygen )
@@ -47,7 +48,7 @@ BDEPEND="
 
 BUILD_DIR="${S}_build"
 
-S="${WORKDIR}/${PN}-$REV"
+S="${WORKDIR}/${PN}-${COMMIT}"
 
 src_prepare() {
 	default
