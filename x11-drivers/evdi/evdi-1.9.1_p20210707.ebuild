@@ -24,6 +24,8 @@ S="${WORKDIR}/${PN}-${REV}"
 
 MODULE_NAMES="evdi(video:${S}/module)"
 
+PATCHES=( ${FILESDIR}/linux-5.15.patch )
+
 pkg_setup() {
 	linux-mod_pkg_setup
 }
