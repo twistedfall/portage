@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{7,8,9} )
+PYTHON_COMPAT=( python3_{8..10} )
 CMAKE_ECLASS=cmake
 inherit java-pkg-opt-2 java-ant-2 cmake-multilib python-r1 toolchain-funcs
 
@@ -142,7 +142,7 @@ RDEPEND="
 		opengl? ( dev-qt/qtopengl:5= )
 	)
 	tesseract? ( app-text/tesseract[opencl=,${MULTILIB_USEDEP}] )
-	threads? ( dev-cpp/tbb[${MULTILIB_USEDEP}] )
+	threads? ( dev-cpp/tbb:=[${MULTILIB_USEDEP}] )
 	tiff? ( media-libs/tiff:0[${MULTILIB_USEDEP}] )
 	v4l? ( >=media-libs/libv4l-0.8.3[${MULTILIB_USEDEP}] )
 	vaapi? ( x11-libs/libva[${MULTILIB_USEDEP}] )
@@ -271,6 +271,17 @@ MULTILIB_WRAPPED_HEADERS=(
 	/usr/include/opencv4/opencv2/hdf.hpp
 	# [contrib_ovis]
 	/usr/include/opencv4/opencv2/ovis.hpp
+	# [contrib_sfm]
+	/usr/include/opencv4/opencv2/sfm.hpp
+	/usr/include/opencv4/opencv2/sfm/conditioning.hpp
+	/usr/include/opencv4/opencv2/sfm/fundamental.hpp
+	/usr/include/opencv4/opencv2/sfm/io.hpp
+	/usr/include/opencv4/opencv2/sfm/numeric.hpp
+	/usr/include/opencv4/opencv2/sfm/projection.hpp
+	/usr/include/opencv4/opencv2/sfm/reconstruct.hpp
+	/usr/include/opencv4/opencv2/sfm/robust.hpp
+	/usr/include/opencv4/opencv2/sfm/simple_pipeline.hpp
+	/usr/include/opencv4/opencv2/sfm/triangulation.hpp
 	# [vtk]
 	/usr/include/opencv4/opencv2/viz.hpp
 	/usr/include/opencv4/opencv2/viz/types.hpp
@@ -286,6 +297,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-4.1.2-opencl-license.patch
 	"${FILESDIR}"/${PN}-4.4.0-disable-native-cpuflag-detect.patch
 	"${FILESDIR}"/${PN}-4.5.0-link-with-cblas-for-lapack.patch
+	"${FILESDIR}"/${PN}-4.5.2-lapack-3.10.patch
 	"${FILESDIR}"/atlas-lapack-search-path.patch
 )
 
