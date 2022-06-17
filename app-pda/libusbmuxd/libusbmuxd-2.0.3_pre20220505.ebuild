@@ -3,13 +3,14 @@
 
 EAPI=7
 
-COMMIT="2ec5354a6ff2ba5e2740eabe7402186f29294f79"
+COMMIT="36ffb7ab6e2a7e33bd1b56398a88895b7b8c615a"
+TARBALL_VERSION="2.0.2-24-g${COMMIT:0:7}"
 
 inherit autotools
 
 DESCRIPTION="USB multiplex daemon for use with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://cgit.libimobiledevice.org/${PN}.git/snapshot/${PN}-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}.zip"
 LICENSE="GPL-2+ LGPL-2.1+" # tools/*.c is GPL-2+, rest is LGPL-2.1+
 SLOT="0/2.0-6" # based on SONAME of libusbmuxd-2.0.so
 KEYWORDS="amd64 ~arm ~arm64 ppc ~ppc64 ~riscv x86"
@@ -28,6 +29,7 @@ S="${WORKDIR}/${PN}-${COMMIT}"
 
 src_prepare() {
 	default
+	echo "${TARBALL_VERSION}" > ${S}/.tarball-version
 	eautoreconf
 }
 

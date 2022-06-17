@@ -3,13 +3,13 @@
 
 EAPI=7
 
-COMMIT="e3a3180b9b380ce9092ee0d7b8e9d82d66b1c261"
+COMMIT="2839789bdb581ede7c331b9b4e07e0d5a89d7d18"
 
 inherit autotools systemd udev
 
 DESCRIPTION="USB multiplex daemon for use with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://cgit.libimobiledevice.org/${PN}.git/snapshot/${PN}-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}.zip"
 
 # src/utils.h is LGPL-2.1+, rest is found in COPYING*
 LICENSE="GPL-2 GPL-3 LGPL-2.1+"

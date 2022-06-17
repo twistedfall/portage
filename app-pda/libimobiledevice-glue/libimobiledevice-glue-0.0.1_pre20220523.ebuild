@@ -3,13 +3,13 @@
 
 EAPI=7
 
-COMMIT="499a5578b15235d00bc492068635de45bec1807d"
+COMMIT="d2ff7969dcd0a12e4f18f63dab03e6cd03054fcb"
 
 inherit autotools
 
 DESCRIPTION="Library with common code used by the libraries and tools around the libimobiledevice project"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://cgit.libimobiledevice.org/${PN}.git/snapshot/${PN}-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}.zip"
 
 LICENSE="GPL-2+ LGPL-2.1+"
 SLOT="0"

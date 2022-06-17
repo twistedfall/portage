@@ -3,14 +3,15 @@
 
 EAPI=7
 
-COMMIT="cf7a3f3d7c06b197ee71c9f97eb9aa05f26d63b5"
+COMMIT="db93bae96d64140230ad050061632531644c46ad"
+TARBALL_VERSION="2.2.0-92-g${COMMIT:0:7}"
 
-PYTHON_COMPAT=( python3_{8,9} )
+PYTHON_COMPAT=( python3_{8,9,10} )
 inherit autotools python-r1 toolchain-funcs
 
 DESCRIPTION="Support library to deal with Apple Property Lists (Binary & XML)"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://cgit.libimobiledevice.org/${PN}.git/snapshot/${PN}-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}.zip"
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0/2.0-3"
@@ -38,6 +39,7 @@ BUILD_DIR="${S}_build"
 
 src_prepare() {
 	default
+	echo "${TARBALL_VERSION}" > ${S}/.tarball-version
 	eautoreconf
 }
 

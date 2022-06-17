@@ -3,15 +3,16 @@
 
 EAPI=7
 
-COMMIT="b3d35fbcf7a1ac669c2e80fbd58920941a5d4c0c"
+COMMIT="93c25b7846179c397a5316fb4fecb31ceff0ec2f"
+TARBALL_VERSION="1.3.0-158-g${COMMIT:0:7}"
 
-PYTHON_COMPAT=( python3_{7,8,9} )
+PYTHON_COMPAT=( python3_{7,8,9,10} )
 
 inherit autotools python-r1
 
 DESCRIPTION="Support library to communicate with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://cgit.libimobiledevice.org/${PN}.git/snapshot/${PN}-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}.zip"
 
 # While COPYING* doesn't mention 'or any later version', all the headers do, hence use +
 LICENSE="GPL-2+ LGPL-2.1+"
@@ -52,6 +53,7 @@ S="${WORKDIR}/${PN}-${COMMIT}"
 
 src_prepare() {
 	default
+	echo "${TARBALL_VERSION}" > ${S}/.tarball-version
 	eautoreconf
 }
 

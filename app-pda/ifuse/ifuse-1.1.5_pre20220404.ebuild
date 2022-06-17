@@ -3,13 +3,13 @@
 
 EAPI=6
 
-COMMIT="14839dcda4ec8c86f11372665c853dc4a294fa72"
+COMMIT="6f5b8e410f9615b3369ca5eb5367745e13d83b92"
 
 inherit autotools readme.gentoo-r1
 
 DESCRIPTION="Mount Apple iPhone/iPod Touch file systems for backup purposes"
 HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://cgit.libimobiledevice.org/${PN}.git/snapshot/${PN}-${COMMIT}.tar.bz2 -> ${P}.tar.bz2"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}.zip"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
