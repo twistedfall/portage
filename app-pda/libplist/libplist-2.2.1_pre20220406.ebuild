@@ -39,7 +39,7 @@ BUILD_DIR="${S}_build"
 
 src_prepare() {
 	default
-	echo "${TARBALL_VERSION}" > "${S}/.tarball-version"
+	echo -n "${TARBALL_VERSION}" > "${S}/.tarball-version"
 	eautoreconf
 }
 

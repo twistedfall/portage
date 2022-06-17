@@ -29,7 +29,7 @@ S="${WORKDIR}/${PN}-${COMMIT}"
 
 src_prepare() {
 	default
-	echo "${TARBALL_VERSION}" > "${S}/.tarball-version"
+	echo -n "${TARBALL_VERSION}" > "${S}/.tarball-version"
 	eautoreconf
 }
 
