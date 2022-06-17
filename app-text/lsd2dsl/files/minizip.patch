@@ -1,0 +1,14 @@
+Only in lsd2dsl-0.5.4: .idea
+diff -ur lsd2dsl-0.5.4.orig/lib/minizip/ioapi.h lsd2dsl-0.5.4/lib/minizip/ioapi.h
+--- lsd2dsl-0.5.4.orig/lib/minizip/ioapi.h	2021-08-16 05:31:10.000000000 +0200
++++ lsd2dsl-0.5.4/lib/minizip/ioapi.h	2022-06-17 11:47:57.160401614 +0200
+@@ -108,6 +108,9 @@
+ extern "C" {
+ #endif
+ 
++#ifndef OF
++#define OF(x) x
++#endif
+ 
+ #define ZLIB_FILEFUNC_SEEK_CUR (1)
+ #define ZLIB_FILEFUNC_SEEK_END (2)
