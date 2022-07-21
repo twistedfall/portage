@@ -1,17 +1,17 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 inherit meson udev
 
 DESCRIPTION="Library to add support for consumer fingerprint readers"
-HOMEPAGE="https://cgit.freedesktop.org/libfprint/libfprint/ https://github.com/freedesktop/libfprint https://gitlab.freedesktop.org/libfprint/libfprint https://gitlab.freedesktop.org/3v1n0/libfprint/-/commits/tod"
+HOMEPAGE="https://cgit.freedesktop.org/libfprint/libfprint/ https://github.com/freedesktop/libfprint https://gitlab.freedesktop.org/libfprint/libfprint https://gitlab.freedesktop.org/3v1n0/libfprint/-/tree/tod"
 SRC_URI="https://github.com/freedesktop/libfprint/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="LGPL-2.1+"
 SLOT="2"
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~riscv ~sparc ~x86"
 IUSE="examples gtk-doc +introspection tod-1"
 
 RDEPEND="
@@ -20,11 +20,12 @@ RDEPEND="
 	dev-libs/libgusb
 	dev-libs/nss
 	virtual/libusb:1=
-	x11-libs/gtk+:3
-	x11-libs/libX11
-	x11-libs/libXv
 	x11-libs/pixman
 	!>=sys-auth/libfprint-1.90:0
+	examples? (
+		x11-libs/gdk-pixbuf:2
+		x11-libs/gtk+:3
+	)
 "
 
 DEPEND="${RDEPEND}"
@@ -32,15 +33,21 @@ DEPEND="${RDEPEND}"
 BDEPEND="
 	virtual/pkgconfig
 	gtk-doc? ( dev-util/gtk-doc )
-	introspection? ( dev-libs/gobject-introspection )
+	introspection? (
+		dev-libs/gobject-introspection
+		dev-libs/libgusb[introspection]
+	)
 "
 
-PATCHES=( ${FILESDIR}/${PN}-0.8.2-fix-implicit-declaration.patch )
+PATCHES=(
+	"${FILESDIR}"/${PN}-1.94.1-test-timeout.patch
+	"${FILESDIR}"/${PN}-1.94.4-stderr-redefinition.patch
+)
 
 src_prepare() {
 	default
 	if use tod-1; then
-		eapply "${FILESDIR}/tod-1.94.1-312b75fe6692917a0d4bd71e7bca2a315837e722.patch"
+		eapply "${FILESDIR}/tod-1.94.4-fbffb62ecba75450a518cb290a6aee714de4b6da.patch"
 	fi
 }
 
@@ -54,5 +61,14 @@ src_configure() {
 		-Dudev_rules_dir=$(get_udevdir)/rules.d
 		--libdir=/usr/$(get_libdir)
 	)
+
 	meson_src_configure
+}
+
+pkg_postinst() {
+	udev_reload
+}
+
+pkg_postrm() {
+	udev_reload
 }
