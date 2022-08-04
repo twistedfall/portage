@@ -1,7 +1,7 @@
 
-EAPI=6
+EAPI=8
 
-inherit cmake-utils
+inherit cmake
 
 DESCRIPTION="ABBYY Lingvo dictionaries decompiler."
 HOMEPAGE="https://github.com/nongeneric/lsd2dsl"
@@ -29,7 +29,7 @@ PATCHES=(
 )
 
 src_configure() {
-	cmake-utils_src_configure
+	cmake_src_configure
 }
 
 src_install() {
