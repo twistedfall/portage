@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit cmake-multilib git-r3
+inherit cmake git-r3
 
 DESCRIPTION="Library to parse and work with the C++ AST"
 HOMEPAGE="https://github.com/foonathan/cppast"
@@ -34,7 +34,7 @@ multilib_src_configure() {
 		-DCPPAST_BUILD_TEST=$(usex test)
 	)
 
-	cmake-utils_src_configure
+	cmake_src_configure
 }
 
 multilib_src_install() {

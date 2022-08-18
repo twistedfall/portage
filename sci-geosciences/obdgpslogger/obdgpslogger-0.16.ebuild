@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=6
+EAPI=7
 
-inherit cmake-utils eutils
+inherit cmake eutils
 
 DESCRIPTION="Logs OBDII and GPS data"
 HOMEPAGE="http://icculus.org/obdgpslogger/"
@@ -47,5 +47,5 @@ src_configure() {
 
 src_install() {
         dodoc ChangeLog COPYING README TODO
-        cmake-utils_src_install
+        cmake_src_install
 }
