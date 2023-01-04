@@ -1,7 +1,7 @@
 # Copyright 1999-2018 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 PYTHON_COMPAT=( python3_{8,9} )
 
@@ -46,7 +46,7 @@ DEPEND="${RDEPEND}
 	"
 
 src_install() {
-	exeinto /usr/share/${PN} 
+	exeinto /usr/share/${PN}
 	doexe ${PN}.py
 	dosym /usr/share/${PN}/${PN}.py ${EPREFIX}/usr/bin/${PN}
 	insinto /usr/share/${PN}/${PN}
