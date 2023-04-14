@@ -1,17 +1,15 @@
-# Copyright 1999-2022 Gentoo Authors
+# Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
-PYTHON_COMPAT=( python3_{8..10} )
-CMAKE_ECLASS=cmake
+PYTHON_COMPAT=( python3_{9..11} )
 inherit flag-o-matic java-pkg-opt-2 java-ant-2 cmake-multilib python-r1 toolchain-funcs
 
 DESCRIPTION="A collection of algorithms and sample code for various computer vision problems"
 HOMEPAGE="https://opencv.org"
 TINY_DNN_PV="1.0.0a3"
 SRC_URI="https://github.com/${PN}/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz
-	https://github.com/opencv/opencv/commit/5440fd6cb43ea65a056c46b691fcdab1a425e92d.patch -> ${PN}-4.5.5-fix-build-with-ffmpeg5.patch
 	dnnsamples? ( https://dev.gentoo.org/~amynka/snap/${PN}-3.4.0-res10_300x300-caffeemodel.tar.gz )
 	download? ( https://github.com/rossbridger/opencv-extdep/archive/4.4.0.tar.gz -> ${PN}-4.4.0_extdep.tar.gz )
 	contrib? (
@@ -22,7 +20,7 @@ SRC_URI="https://github.com/${PN}/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz
 
 LICENSE="Apache-2.0"
 SLOT="0/${PV}" # subslot = libopencv* soname version
-KEYWORDS="amd64 ~arm arm64 ~ppc ~ppc64 ~riscv x86"
+KEYWORDS="amd64 ~arm arm64 ~loong ~ppc ~ppc64 ~riscv x86"
 IUSE="contrib contribcvv contribdnn contribfreetype contribhdf contribovis contribsfm contribxfeatures2d cuda debug dnnsamples download +eigen examples +features2d ffmpeg gdal gflags glog gphoto2 gstreamer gtk3 ieee1394 jpeg jpeg2k lapack lto opencl openexr opengl openmp opencvapps png +python qrcode qt5 tesseract testprograms threads tiff vaapi v4l vtk webp xine"
 
 # The following lines are shamelessly stolen from ffmpeg-9999.ebuild with modifications
@@ -99,8 +97,8 @@ RDEPEND="
 	contribovis? ( dev-games/ogre:0/1.12 )
 	ffmpeg? ( media-video/ffmpeg:0=[${MULTILIB_USEDEP}] )
 	gdal? ( sci-libs/gdal:= )
-	gflags? ( dev-cpp/gflags[${MULTILIB_USEDEP}] )
-	glog? ( dev-cpp/glog[${MULTILIB_USEDEP}] )
+	gflags? ( dev-cpp/gflags:=[${MULTILIB_USEDEP}] )
+	glog? ( dev-cpp/glog:=[${MULTILIB_USEDEP}] )
 	gphoto2? ( media-libs/libgphoto2:=[${MULTILIB_USEDEP}] )
 	gstreamer? (
 		media-libs/gstreamer:1.0[${MULTILIB_USEDEP}]
@@ -115,12 +113,11 @@ RDEPEND="
 		sys-libs/libraw1394[${MULTILIB_USEDEP}]
 	)
 	java? ( >=virtual/jre-1.8:* )
-	jpeg? ( virtual/jpeg:0[${MULTILIB_USEDEP}] )
+	jpeg? ( media-libs/libjpeg-turbo:=[${MULTILIB_USEDEP}] )
 	jpeg2k? ( media-libs/openjpeg:2=[${MULTILIB_USEDEP}] )
 	lapack? (
 		virtual/cblas
 		>=virtual/lapack-3.10
-		sci-libs/atlas
 		dev-cpp/eigen
 	)
 	opencl? ( virtual/opencl[${MULTILIB_USEDEP}] )
@@ -147,9 +144,9 @@ RDEPEND="
 	)
 	tesseract? ( app-text/tesseract[opencl=,${MULTILIB_USEDEP}] )
 	threads? ( dev-cpp/tbb:=[${MULTILIB_USEDEP}] )
-	tiff? ( media-libs/tiff:0[${MULTILIB_USEDEP}] )
+	tiff? ( media-libs/tiff:=[${MULTILIB_USEDEP}] )
 	v4l? ( >=media-libs/libv4l-0.8.3[${MULTILIB_USEDEP}] )
-	vaapi? ( x11-libs/libva[${MULTILIB_USEDEP}] )
+	vaapi? ( media-libs/libva[${MULTILIB_USEDEP}] )
 	vtk? ( sci-libs/vtk[rendering] )
 	webp? ( media-libs/libwebp:=[${MULTILIB_USEDEP}] )
 	xine? ( media-libs/xine-lib )"
@@ -295,7 +292,8 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-4.1.2-opencl-license.patch
 	"${FILESDIR}"/${PN}-4.4.0-disable-native-cpuflag-detect.patch
 	"${FILESDIR}"/${PN}-4.5.0-link-with-cblas-for-lapack.patch
-	"${DISTDIR}"/${PN}-4.5.5-fix-build-with-ffmpeg5.patch
+	"${FILESDIR}"/${P}-fix-build-examples.patch # bug 830163, pending upstream PR #22245
+	"${FILESDIR}"/${P}-fix-ffmpeg-5.patch
 	"${FILESDIR}"/atlas-lapack-search-path.patch
 )
 
