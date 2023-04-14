@@ -1,7 +1,7 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 if [[ ${PV} = *9999 ]]; then
 	EGIT_BRANCH="qtwebkit-5.212"
@@ -10,11 +10,11 @@ if [[ ${PV} = *9999 ]]; then
 else
 	MY_P="${PN}-${PV/_pre20200309/-alpha4}" # present as upgrade over previous snapshot
 	SRC_URI="https://github.com/annulen/webkit/releases/download/${MY_P}/${MY_P}.tar.xz"
-	KEYWORDS="amd64 arm arm64 ppc64 x86"
+	KEYWORDS="amd64 arm arm64 ppc64 riscv x86"
 	S="${WORKDIR}/${MY_P}"
 fi
-PYTHON_COMPAT=( python3_{7,8,9} )
-USE_RUBY="ruby25 ruby26 ruby27"
+PYTHON_COMPAT=( python3_{9..11} )
+USE_RUBY="ruby27 ruby30 ruby31 ruby32"
 inherit check-reqs cmake flag-o-matic python-any-r1 qmake-utils ruby-single toolchain-funcs
 
 DESCRIPTION="WebKit rendering library for the Qt5 framework (deprecated)"
@@ -88,6 +88,10 @@ PATCHES=(
 	"${FILESDIR}/${P}-icu-68.patch" # bug 753260
 	"${FILESDIR}/${P}-python-3.9.patch" # bug 766303
 	"${FILESDIR}/${P}-glib-2.68.patch" # bug 777759
+	"${FILESDIR}/${P}-position.patch"
+	# From https://github.com/WebKit/WebKit/commit/c7d19a492d97f9282a546831beb918e03315f6ef
+	# Ruby 3.2 removes Object#=~ completely
+	"${FILESDIR}/${P}-webkit-offlineasm-warnings-ruby27.patch"
 )
 
 _check_reqs() {
@@ -131,12 +135,14 @@ src_configure() {
 		-DENABLE_X11_TARGET=$(usex X)
 	)
 
-	if has_version "virtual/rubygems[ruby_targets_ruby27]"; then
-		mycmakeargs+=( -DRUBY_EXECUTABLE=$(type -P ruby27) )
-	elif has_version "virtual/rubygems[ruby_targets_ruby26]"; then
-		mycmakeargs+=( -DRUBY_EXECUTABLE=$(type -P ruby26) )
+	if has_version "virtual/rubygems[ruby_targets_ruby32]"; then
+		mycmakeargs+=( -DRUBY_EXECUTABLE=$(type -P ruby32) )
+	elif has_version "virtual/rubygems[ruby_targets_ruby31]"; then
+		mycmakeargs+=( -DRUBY_EXECUTABLE=$(type -P ruby31) )
+	elif has_version "virtual/rubygems[ruby_targets_ruby30]"; then
+		mycmakeargs+=( -DRUBY_EXECUTABLE=$(type -P ruby30) )
 	else
-		mycmakeargs+=( -DRUBY_EXECUTABLE=$(type -P ruby25) )
+		mycmakeargs+=( -DRUBY_EXECUTABLE=$(type -P ruby27) )
 	fi
 
 	cmake_src_configure
