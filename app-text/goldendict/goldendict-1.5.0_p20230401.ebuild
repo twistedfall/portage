@@ -1,14 +1,14 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 PLOCALES="ar_SA ay_WI be_BY be_BY@latin bg_BG cs_CZ de_DE el_GR eo_EO es_AR es_BO es_ES fa_IR fi_FI fr_FR hi_IN ie_001 it_IT ja_JP jb_JB ko_KR lt_LT mk_MK nl_NL pl_PL pt_BR qt_es qt_it qt_lt qu_WI ru_RU sk_SK sq_AL sr_SR sv_SE tg_TJ tk_TM tr_TR uk_UA vi_VN zh_CN zh_TW"
 
 inherit desktop qmake-utils plocale
 
 DESCRIPTION="Feature-rich dictionary lookup program"
 HOMEPAGE="http://goldendict.org/"
-REV="0e888db8746766984a4422af9972de8753d4d6c4"
+REV="8834e4a2924d143751870f4b943c3ce608b10a7d"
 SRC_URI="https://github.com/goldendict/goldendict/archive/${REV}.zip -> ${P}.zip"
 
 LICENSE="GPL-3"
@@ -56,6 +56,7 @@ BDEPEND="
 
 PATCHES=(
 	"${FILESDIR}/${PN}-1.5.0-qtsingleapplication-unbundle.patch"
+    "${FILESDIR}/${PN}-fix-all-plocale.patch"
 )
 
 S="${WORKDIR}/${PN}-${REV}"
@@ -93,7 +94,7 @@ src_configure() {
 }
 
 install_locale() {
-	insinto /usr/share/apps/${PN}/locale
+	insinto /usr/share/${PN}/locale
 	doins "${S}"/locale/${1}.qm
 	eend $? || die "failed to install $1 locale"
 }
@@ -105,5 +106,5 @@ src_install() {
 
 	insinto /usr/share/${PN}/help
 	doins help/gdhelp_en.qch
-	l10n_for_each_locale_do install_locale
+	plocale_for_each_locale install_locale
 }
