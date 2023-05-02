@@ -4,7 +4,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python{3_7,3_8,3_9} )
+PYTHON_COMPAT=( python3_{9..11} )
 inherit eutils autotools python-r1
 
 MY_P="concordance-${PV}"
@@ -20,7 +20,8 @@ IUSE="python"
 
 DEPEND="virtual/libusb:0
 	dev-libs/zziplib
-	dev-libs/hidapi"
+	dev-libs/hidapi
+	net-misc/curl"
 RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/${MY_P}/${PN}"
@@ -30,7 +31,7 @@ src_configure() {
 }
 
 src_install() {
-	einstall
+	default
 
 	dodoc README
 	dodoc ../Changelog ../TODO
