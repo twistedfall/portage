@@ -12,20 +12,21 @@ SLOT="0"
 KEYWORDS="~x86 ~amd64"
 
 DEPEND="
-	dev-libs/libzip
-	dev-libs/boost
-	dev-util/cmake
-	dev-qt/qtcore:5
-	media-libs/libvorbis
-	media-libs/libsndfile
 	dev-cpp/gtest
+	dev-libs/boost
+	dev-libs/libfmt
+	dev-libs/libzip
+	dev-qt/qtcore:5
+	dev-util/cmake
+	media-libs/libsndfile
+	media-libs/libvorbis
 "
 
 IUSE="debug"
 
 PATCHES=(
 	"${FILESDIR}/minizip.patch"
-	"${FILESDIR}/tests.patch"
+	"${FILESDIR}/no-werror.patch"
 )
 
 src_configure() {

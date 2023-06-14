@@ -1,0 +1,17 @@
+diff -u lsd2dsl-0.5.6.orig/CMakeLists.txt lsd2dsl-0.5.6/CMakeLists.txt
+--- lsd2dsl-0.5.6.orig/CMakeLists.txt	2023-03-19 13:38:29.000000000 +0100
++++ lsd2dsl-0.5.6/CMakeLists.txt	2023-06-14 09:01:54.340306534 +0200
+@@ -30,7 +30,7 @@
+     add_compile_options(-fno-limit-debug-info)
+ endif()
+ 
+-set(CMAKE_CXX_FLAGS "-Werror -Werror=return-type -Wall -Wextra -Wno-implicit-fallthrough ${CMAKE_CXX_FLAGS}")
++set(CMAKE_CXX_FLAGS "-Werror=return-type -Wall -Wextra -Wno-implicit-fallthrough ${CMAKE_CXX_FLAGS}")
+ set(CMAKE_C_FLAGS "-Wno-everything ${CMAKE_C_FLAGS}")
+ 
+ add_subdirectory(lib)
+Common subdirectories: lsd2dsl-0.5.6.orig/console and lsd2dsl-0.5.6/console
+Common subdirectories: lsd2dsl-0.5.6.orig/gui and lsd2dsl-0.5.6/gui
+Common subdirectories: lsd2dsl-0.5.6.orig/lib and lsd2dsl-0.5.6/lib
+Common subdirectories: lsd2dsl-0.5.6.orig/scripts and lsd2dsl-0.5.6/scripts
+Common subdirectories: lsd2dsl-0.5.6.orig/tests and lsd2dsl-0.5.6/tests
