@@ -6,7 +6,7 @@ DESCRIPTION="QR decoder library"
 HOMEPAGE="https://github.com/dlbeer/quirc"
 
 SRC_URI="https://github.com/dlbeer/quirc/archive/v${PV}.tar.gz -> quirc-${PV}.tar.gz"
-SONAME="libquirc.so.1.0"
+SONAME="libquirc.so.1.2"
 
 LICENSE="ISC"
 SLOT="0"
