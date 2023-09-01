@@ -1,7 +1,7 @@
 
 EAPI=7
 
-inherit eutils cmake git-r3
+inherit cmake git-r3
 
 DESCRIPTION="Dictionary converter"
 HOMEPAGE="https://github.com/soshial/xdxf_makedict"
