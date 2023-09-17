@@ -1,7 +1,5 @@
 EAPI=7
 
-inherit eutils
-
 DESCRIPTION="QR decoder library"
 HOMEPAGE="https://github.com/dlbeer/quirc"
 
