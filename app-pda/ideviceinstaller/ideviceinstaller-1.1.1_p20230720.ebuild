@@ -3,7 +3,10 @@
 
 EAPI=8
 
-COMMIT="3909271599917bc4a3a996f99bdd3f88c49577fa"
+COMMIT="b9cfe0b264f66eab9ad88e11eb6b0523cb1de911"
+TARBALL_VERSION="${PV}-30-g${COMMIT:0:7}"
+
+inherit autotools
 
 DESCRIPTION="A tool to interact with the installation_proxy of an Apple's iDevice"
 HOMEPAGE="https://www.libimobiledevice.org/"
@@ -15,9 +18,19 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND=">=app-pda/libimobiledevice-1.1.4:=
-	>=app-pda/libplist-1.8:=
+	>=app-pda/libplist-2.3.0:=
 	>=dev-libs/libzip-0.8"
 DEPEND="${RDEPEND}"
 BDEPEND="virtual/pkgconfig"
 
 S="${WORKDIR}/${PN}-${COMMIT}"
+
+src_prepare() {
+	default
+	echo -n "${TARBALL_VERSION}" > "${S}/.tarball-version"
+	eautoreconf
+}
+
+src_install() {
+	default
+}
