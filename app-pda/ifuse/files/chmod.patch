@@ -1,9 +1,10 @@
---- src/ifuse.c.orig	2012-04-08 21:11:03.000000000 +0300
-+++ src/ifuse.c	2013-02-22 11:07:46.996044037 +0200
-@@ -585,6 +585,16 @@
+diff -ur ifuse-6f5b8e410f9615b3369ca5eb5367745e13d83b92.orig/src/ifuse.c ifuse-6f5b8e410f9615b3369ca5eb5367745e13d83b92/src/ifuse.c
+--- ifuse-6f5b8e410f9615b3369ca5eb5367745e13d83b92.orig/src/ifuse.c	2022-04-04 08:55:58.000000000 +0200
++++ ifuse-6f5b8e410f9615b3369ca5eb5367745e13d83b92/src/ifuse.c	2023-10-05 11:54:25.322858889 +0200
+@@ -588,6 +588,16 @@
  	return -get_afc_error_as_errno(err);
  }
- 
+
 +static ifuse_chmod(const char *file, mode_t mode)
 +{
 +	return 0;
@@ -17,7 +18,7 @@
  static struct fuse_operations ifuse_oper = {
  	.getattr = ifuse_getattr,
  	.statfs = ifuse_statfs,
-@@ -606,7 +616,9 @@
+@@ -609,7 +619,9 @@
  	.fsync = ifuse_fsync,
  	.release = ifuse_release,
  	.init = ifuse_init,
@@ -26,5 +27,5 @@
 +	.chmod = ifuse_chmod,
 +	.chown = ifuse_chown
  };
- 
+
  static void print_usage()

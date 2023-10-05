@@ -27,6 +27,9 @@ The music database is hashed, and attempting to add files will cause the
 iPod/iPhone to consider your database unauthorised.
 It will respond by wiping all media files, requiring a restore through iTunes."
 
+PATCHES=(
+	"${FILESDIR}/chmod.patch"
+)
 S="${WORKDIR}/${PN}-${COMMIT}"
 
 src_prepare() {
