@@ -8,8 +8,7 @@ inherit desktop qmake-utils plocale
 
 DESCRIPTION="Feature-rich dictionary lookup program"
 HOMEPAGE="http://goldendict.org/"
-REV="8834e4a2924d143751870f4b943c3ce608b10a7d"
-SRC_URI="https://github.com/goldendict/goldendict/archive/${REV}.zip -> ${P}.zip"
+SRC_URI="https://github.com/${PN}/${PN}/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -17,7 +16,6 @@ KEYWORDS="amd64 x86"
 IUSE="cjk debug ffmpeg"
 
 RDEPEND="
-	app-arch/bzip2
 	>=app-text/hunspell-1.5:=
 	dev-libs/eb
 	dev-libs/lzo
@@ -58,8 +56,6 @@ PATCHES=(
 	"${FILESDIR}/${PN}-1.5.0-qtsingleapplication-unbundle.patch"
     "${FILESDIR}/${PN}-fix-all-plocale.patch"
 )
-
-S="${WORKDIR}/${PN}-${REV}"
 
 src_prepare() {
 	default
