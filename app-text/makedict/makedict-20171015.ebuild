@@ -1,5 +1,5 @@
 
-EAPI=7
+EAPI=8
 
 inherit cmake git-r3
 

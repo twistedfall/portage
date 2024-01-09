@@ -1,4 +1,4 @@
-EAPI=7
+EAPI=8
 
 DESCRIPTION="QR decoder library"
 HOMEPAGE="https://github.com/dlbeer/quirc"

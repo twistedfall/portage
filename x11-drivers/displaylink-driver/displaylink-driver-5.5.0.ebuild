@@ -1,9 +1,9 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
-inherit eutils systemd udev
+inherit systemd udev
 
 DESCRIPTION="DisplayLink USB Graphics Software"
 HOMEPAGE="http://www.displaylink.com/downloads/ubuntu"
@@ -26,7 +26,7 @@ RDEPEND=">=sys-devel/gcc-4.8.3
 	!systemd? ( sys-power/pm-utils )"
 
 pkg_nofetch() {
-	einfo "Please download DisplayLink USB Graphics Software for Ubuntu 5.4.zip from"
+	einfo "Please download DisplayLink USB Graphics Software for Ubuntu 5.5.zip from"
 	einfo "http://www.displaylink.com/downloads/ubuntu"
 	einfo "and rename it to ${P}.zip"
 }

@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
+EAPI=8
 
 DESCRIPTION="Linux client for programming the Logitech Harmony universal remote"
 HOMEPAGE="http://www.phildev.net/concordance/"

@@ -1,7 +1,7 @@
 # Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 COMMIT="6fc41f57fc607df9b07446ca45bdf754225c9bd9"
 TARBALL_VERSION="${PV}-190-g${COMMIT:0:7}"

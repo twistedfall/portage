@@ -1,5 +1,5 @@
 
-EAPI=6
+EAPI=8
 
 inherit rpm
 

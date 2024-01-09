@@ -1,6 +1,4 @@
-EAPI=6
-
-inherit eutils
+EAPI=8
 
 KEYWORDS="~amd64 ~x86"
 DESCRIPTION="DavMail POP/IMAP/SMTP/Caldav/Carddav/LDAP Exchange Gateway"
