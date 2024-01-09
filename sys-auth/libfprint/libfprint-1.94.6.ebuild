@@ -1,27 +1,32 @@
-# Copyright 1999-2022 Gentoo Authors
+# Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 inherit meson udev
 
+MY_P="${PN}-v${PV}"
+
 DESCRIPTION="Library to add support for consumer fingerprint readers"
-HOMEPAGE="https://cgit.freedesktop.org/libfprint/libfprint/ https://github.com/freedesktop/libfprint https://gitlab.freedesktop.org/libfprint/libfprint https://gitlab.freedesktop.org/3v1n0/libfprint/-/tree/tod"
-SRC_URI="https://github.com/freedesktop/libfprint/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="
+	https://cgit.freedesktop.org/libfprint/libfprint
+	https://gitlab.freedesktop.org/libfprint/libfprint
+	https://gitlab.freedesktop.org/3v1n0/libfprint/-/tree/tod
+"
+SRC_URI="https://gitlab.freedesktop.org/${PN}/${PN}/-/archive/v${PV}/${MY_P}.tar.bz2 -> ${P}.tar.bz2"
 
 LICENSE="LGPL-2.1+"
 SLOT="2"
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~riscv ~sparc ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~loong ~ppc ~ppc64 ~riscv ~sparc ~x86"
 IUSE="examples gtk-doc +introspection tod-1"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgudev
-	dev-libs/libgusb
 	dev-libs/nss
-	virtual/libusb:1=
+	dev-python/pygobject
+	dev-libs/libgusb
 	x11-libs/pixman
-	!>=sys-auth/libfprint-1.90:0
 	examples? (
 		x11-libs/gdk-pixbuf:2
 		x11-libs/gtk+:3
@@ -39,15 +44,15 @@ BDEPEND="
 	)
 "
 
-PATCHES=(
-	"${FILESDIR}"/${PN}-1.94.1-test-timeout.patch
-	"${FILESDIR}"/${PN}-1.94.4-stderr-redefinition.patch
-)
+PATCHES=( "${FILESDIR}/${PN}-1.94.1-test-timeout.patch" )
+
+S="${WORKDIR}/${MY_P}"
 
 src_prepare() {
 	default
 	if use tod-1; then
-		eapply "${FILESDIR}/tod-1.94.4-fbffb62ecba75450a518cb290a6aee714de4b6da.patch"
+		# create patch with git diff --text origin/v1.94.6..v1.94.6+tod1 > tod-1.94.6.patch
+		eapply "${FILESDIR}/tod-1.94.6.patch"
 	fi
 }
 
@@ -55,11 +60,11 @@ src_configure() {
 	local emesonargs=(
 		$(meson_use examples gtk-examples)
 		$(meson_use gtk-doc doc)
-		$(meson_use introspection)
+		$(meson_use introspection introspection)
 		-Ddrivers=all
+		-Dinstalled-tests=false
 		-Dudev_rules=enabled
 		-Dudev_rules_dir=$(get_udevdir)/rules.d
-		--libdir=/usr/$(get_libdir)
 	)
 
 	meson_src_configure
