@@ -1,1 +1,0 @@
-/home/pro/projects/fortunes/genborfortunes.py
