@@ -17,7 +17,7 @@ DEPEND="
 	dev-libs/libfmt
 	dev-libs/libzip
 	dev-qt/qtcore:5
-	dev-util/cmake
+	dev-build/cmake
 	media-libs/libsndfile
 	media-libs/libvorbis
 "
@@ -27,6 +27,7 @@ IUSE="debug"
 PATCHES=(
 	"${FILESDIR}/minizip.patch"
 	"${FILESDIR}/no-werror.patch"
+	"${FILESDIR}/include-fix.patch"
 )
 
 src_configure() {
