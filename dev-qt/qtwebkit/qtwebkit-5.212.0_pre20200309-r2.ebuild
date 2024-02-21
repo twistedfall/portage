@@ -93,6 +93,7 @@ PATCHES=(
 	# Ruby 3.2 removes Object#=~ completely
 	"${FILESDIR}/${P}-webkit-offlineasm-warnings-ruby27.patch"
 	"${FILESDIR}/${P}-cstdint.patch"
+	"${FILESDIR}/${P}-libxml2.patch"
 )
 
 _check_reqs() {

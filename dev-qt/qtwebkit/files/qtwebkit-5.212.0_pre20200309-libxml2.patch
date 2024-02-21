@@ -1,0 +1,27 @@
+diff -ur qtwebkit-5.212.0-alpha4.orig/Source/WebCore/xml/XSLTProcessor.h qtwebkit-5.212.0-alpha4/Source/WebCore/xml/XSLTProcessor.h
+--- qtwebkit-5.212.0-alpha4.orig/Source/WebCore/xml/XSLTProcessor.h	2020-03-04 18:16:37.000000000 +0100
++++ qtwebkit-5.212.0-alpha4/Source/WebCore/xml/XSLTProcessor.h	2024-02-21 11:53:27.465508178 +0100
+@@ -64,9 +64,9 @@
+ 
+     void reset();
+ 
+-    static void parseErrorFunc(void* userData, xmlError*);
++    static void parseErrorFunc(void* userData, const xmlError*);
+     static void genericErrorFunc(void* userData, const char* msg, ...);
+-    
++
+     // Only for libXSLT callbacks
+     XSLStyleSheet* xslStylesheet() const { return m_stylesheet.get(); }
+ 
+diff -ur qtwebkit-5.212.0-alpha4.orig/Source/WebCore/xml/XSLTProcessorLibxslt.cpp qtwebkit-5.212.0-alpha4/Source/WebCore/xml/XSLTProcessorLibxslt.cpp
+--- qtwebkit-5.212.0-alpha4.orig/Source/WebCore/xml/XSLTProcessorLibxslt.cpp	2020-03-04 18:16:37.000000000 +0100
++++ qtwebkit-5.212.0-alpha4/Source/WebCore/xml/XSLTProcessorLibxslt.cpp	2024-02-21 11:25:35.279020099 +0100
+@@ -78,7 +78,7 @@
+     // It would be nice to do something with this error message.
+ }
+ 
+-void XSLTProcessor::parseErrorFunc(void* userData, xmlError* error)
++void XSLTProcessor::parseErrorFunc(void* userData, const xmlError* error)
+ {
+     PageConsoleClient* console = static_cast<PageConsoleClient*>(userData);
+     if (!console)
