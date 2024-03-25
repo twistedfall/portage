@@ -3,7 +3,7 @@ EAPI=8
 inherit systemd
 
 DESCRIPTION="Amazon Session Manager Plugin for managing Session Manager APIs"
-HOMEPAGE="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html"
+HOMEPAGE="https://github.com/aws/session-manager-plugin"
 SRC_URI="amd64? ( https://s3.amazonaws.com/session-manager-downloads/plugin/${PV}/ubuntu_64bit/${PN}.deb -> ${P}-amd64.deb )
 	x86? ( https://s3.amazonaws.com/session-manager-downloads/plugin/${PV}/ubuntu_32bit/${PN}.deb -> ${P}-x86.deb )
 "
