@@ -1,12 +1,12 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-COMMIT="d45396aad911d496494a587bd2d3ef20c2e8a8d0"
-TARBALL_VERSION="${PV}-19-g${COMMIT:0:7}"
+COMMIT="e8791e2d8b1d1672439b78d31271a8cf74d6a16d"
+TARBALL_VERSION="${PV}-2-g${COMMIT:0:7}"
 
-PYTHON_COMPAT=( python3_{9..11} )
+PYTHON_COMPAT=( python3_{10..12} )
 inherit autotools python-r1 toolchain-funcs
 
 DESCRIPTION="Support library to deal with Apple Property Lists (Binary & XML)"
@@ -15,7 +15,7 @@ SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}
 
 LICENSE="GPL-2+ LGPL-2.1+"
 SLOT="0/2.0-4"
-KEYWORDS="amd64 ~arm arm64 ~loong ppc ~ppc64 ~riscv x86"
+KEYWORDS="~amd64 ~arm arm64 ~loong ppc ~ppc64 ~riscv ~s390 x86"
 IUSE="python"
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
@@ -28,10 +28,6 @@ BDEPEND="
 "
 
 DOCS=( AUTHORS NEWS README.md )
-
-PATCHES=(
-	"${FILESDIR}"/libplist-2.2.0-pkgconfig-lib.patch
-)
 
 S="${WORKDIR}/${PN}-${COMMIT}"
 
@@ -107,12 +103,4 @@ src_install() {
 	fi
 
 	find "${ED}" -name '*.la' -delete || die
-
-	# temporary fix for 2.2.0 release:
-	# bug #733082,
-	# https://github.com/libimobiledevice/libplist/issues/163
-	# upstream commit 137716df3f197a7184c1fba88fcb30480dafd6e0
-	dosym ./libplist-2.0.pc /usr/$(get_libdir)/pkgconfig/libplist.pc
-	dosym ./libplist++-2.0.so.4.3.0 /usr/$(get_libdir)/libplist++.so
-	dosym ./libplist-2.0.so.4.3.0 /usr/$(get_libdir)/libplist.so
 }

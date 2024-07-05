@@ -50,10 +50,6 @@ BDEPEND="
 
 BUILD_DIR="${S}_build"
 
-PATCHES=(
-	"${FILESDIR}/python-noexcept.patch"
-)
-
 S="${WORKDIR}/${PN}-${COMMIT}"
 
 src_prepare() {

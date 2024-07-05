@@ -1,12 +1,12 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-COMMIT="6fc41f57fc607df9b07446ca45bdf754225c9bd9"
-TARBALL_VERSION="${PV}-190-g${COMMIT:0:7}"
+COMMIT="2a0a6d57df3791419dfcda070d9ba6189f518bd5"
+TARBALL_VERSION="${PV}-212-g${COMMIT:0:7}"
 
-PYTHON_COMPAT=( python3_{9..11} )
+PYTHON_COMPAT=( python3_{10..12} )
 
 inherit autotools python-r1
 
@@ -17,14 +17,15 @@ SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}
 # While COPYING* doesn't mention 'or any later version', all the headers do, hence use +
 LICENSE="GPL-2+ LGPL-2.1+"
 SLOT="0/1.0-6" # based on SONAME of libimobiledevice-1.0.so
-KEYWORDS="amd64 ~arm ~arm64 ~loong ppc ~ppc64 ~riscv x86"
+KEYWORDS="~amd64 ~arm ~arm64 ~loong ppc ~ppc64 ~riscv ~x86"
 IUSE="doc gnutls python static-libs"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 RDEPEND="
-	app-pda/libimobiledevice-glue
+	>=app-pda/libimobiledevice-glue-1.3.0
 	>=app-pda/libplist-2.3.0:=
 	>=app-pda/libusbmuxd-2.0.2:=
+	>=app-pda/libtatsu-1.0.0:=
 	gnutls? (
 		dev-libs/libgcrypt:0
 		>=dev-libs/libtasn1-1.1
@@ -44,8 +45,8 @@ DEPEND="
 # <cython-3 for bug #898666
 BDEPEND="
 	virtual/pkgconfig
-	doc? ( app-doc/doxygen )
-	python? ( <dev-python/cython-3[${PYTHON_USEDEP}] )
+	doc? ( app-text/doxygen )
+	python? ( dev-python/cython[${PYTHON_USEDEP}] )
 "
 
 BUILD_DIR="${S}_build"

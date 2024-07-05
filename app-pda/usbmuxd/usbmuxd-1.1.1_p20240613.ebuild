@@ -3,8 +3,8 @@
 
 EAPI=8
 
-COMMIT="c7a0dd9b82633ea347497626282e3051a469ef50"
-TARBALL_VERSION="${PV}-54-g${COMMIT:0:7}"
+COMMIT="bc0b91ca856811f4393318dc83db6dc3c1ac326d"
+TARBALL_VERSION="${PV}-56-g${COMMIT:0:7}"
 
 inherit autotools systemd udev
 
