@@ -16,21 +16,27 @@ DEPEND="
 	dev-libs/boost
 	dev-libs/libfmt
 	dev-libs/libzip
-	dev-qt/qtcore:5
+	dev-qt/qt5compat
+	dev-qt/qtbase:6[widgets]
+	dev-qt/qtwebengine:6[pdfium,widgets]
 	dev-build/cmake
 	media-libs/libsndfile
 	media-libs/libvorbis
 "
 
-IUSE="debug"
+IUSE="debug duden"
 
 PATCHES=(
-	"${FILESDIR}/minizip.patch"
 	"${FILESDIR}/no-werror.patch"
-	"${FILESDIR}/include-fix.patch"
+	"${FILESDIR}/include-cassert.patch"
+	"${FILESDIR}/int-cast.patch"
 )
 
 src_configure() {
+	local mycmakeargs=(
+		-DENABLE_DUDEN=$(usex duden)
+	)
+
 	cmake_src_configure
 }
 

@@ -8,7 +8,8 @@ inherit desktop qmake-utils plocale
 
 DESCRIPTION="Feature-rich dictionary lookup program"
 HOMEPAGE="http://goldendict.org/"
-SRC_URI="https://github.com/${PN}/${PN}/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
+REV="0018a066477a005384be762c15cee9e9585b1a22"
+SRC_URI="https://github.com/goldendict/goldendict/archive/${REV}.zip -> ${P}.zip"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -29,7 +30,7 @@ RDEPEND="
 	dev-qt/qtsingleapplication[qt5(+),X]
 	dev-qt/qtsql:5
 	dev-qt/qtsvg:5
-	dev-qt/qtwebkit:5
+	dev-qt/qtwebengine:5
 	dev-qt/qtwidgets:5
 	dev-qt/qtx11extras:5
 	dev-qt/qtxml:5
@@ -54,8 +55,13 @@ BDEPEND="
 
 PATCHES=(
 	"${FILESDIR}/${PN}-1.5.0-qtsingleapplication-unbundle.patch"
-    "${FILESDIR}/${PN}-fix-all-plocale.patch"
+	"${FILESDIR}/${PN}-fix-all-plocale.patch"
+	# patch from https://github.com/vedgy/goldendict/commits/we/webkit-or-webengine/
+	# merge upstream master into that branch and create a patch with `git diff origin/master..@ > goldendict-webengine.patch`
+	"${FILESDIR}/${PN}-webengine.patch"
 )
+
+S="${WORKDIR}/${PN}-${REV}"
 
 src_prepare() {
 	default
@@ -82,7 +88,7 @@ src_prepare() {
 }
 
 src_configure() {
-	local myconf=()
+	local myconf=( CONFIG+=use_qtwebengine )
 	use ffmpeg || myconf+=( CONFIG+=no_ffmpeg_player )
 	use cjk && myconf+=( CONFIG+=chinese_conversion_support )
 

@@ -1,0 +1,12 @@
+diff '--color=auto' -ur lsd2dsl-0.6.0.orig/lib/duden/unzip/inflate.c lsd2dsl-0.6.0/lib/duden/unzip/inflate.c
+--- lsd2dsl-0.6.0.orig/lib/duden/unzip/inflate.c	2024-01-14 16:53:26.000000000 +0100
++++ lsd2dsl-0.6.0/lib/duden/unzip/inflate.c	2025-01-08 09:09:57.472757955 +0100
+@@ -21,7 +21,7 @@
+ #else
+ #define FLUSH(w)                                                                    \
+     ((G.mem_mode) ? memflush(__G__ redirSlide, (ulg)(w))                            \
+-                  : flush(__G__ redirSlide, (ulg)(w), 0))
++                  : flush(__G__ (int)redirSlide, (ulg)(w), 0))
+ #define NEXTBYTE (G.incnt-- > 0 ? (int)(*G.inptr++) : readbyte(__G))
+ #endif
+ 
