@@ -5,12 +5,12 @@ diff -ur ifuse-6f5b8e410f9615b3369ca5eb5367745e13d83b92.orig/src/ifuse.c ifuse-6
  	return -get_afc_error_as_errno(err);
  }
 
-+static ifuse_chmod(const char *file, mode_t mode)
++static int ifuse_chmod(const char *file, mode_t mode, struct fuse_file_info *fi)
 +{
 +	return 0;
 +}
 +
-+static ifuse_chown(const char *file, uid_t user, gid_t group)
++static int ifuse_chown(const char *file, uid_t user, gid_t group, struct fuse_file_info *fi)
 +{
 +	return 0;
 +}

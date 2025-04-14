@@ -3,39 +3,37 @@
 
 EAPI=8
 
-COMMIT="07cd6f774fd444f981ade6e75e10962ba0439350"
-TARBALL_VERSION="${PV}-34-g${COMMIT:0:7}"
-
 inherit autotools
 
+MY_COMMIT=19d6bec393c9f9b31ccb090059f59268da32e281
+
 DESCRIPTION="USB multiplex daemon for use with Apple iPhone/iPod Touch devices"
-HOMEPAGE="https://www.libimobiledevice.org/"
-SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}.zip"
+HOMEPAGE="https://libimobiledevice.org/"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
+S="${WORKDIR}/${PN}-${MY_COMMIT}"
+
 LICENSE="GPL-2+ LGPL-2.1+" # tools/*.c is GPL-2+, rest is LGPL-2.1+
-SLOT="0/2.0-6" # based on SONAME of libusbmuxd-2.0.so
-KEYWORDS="~amd64 ~arm ~arm64 ~loong ppc ~ppc64 ~riscv ~s390 ~x86"
-IUSE="static-libs"
+SLOT="0/2.0-7" # based on SONAME of libusbmuxd-2.0.so
+KEYWORDS="~amd64 ~arm ~arm64 ~hppa ~loong ~ppc ~ppc64 ~riscv ~s390 ~x86"
 
 RDEPEND="
+	>=app-pda/libimobiledevice-glue-1.2.0:=
 	>=app-pda/libplist-2.3.0:=
-	app-pda/libimobiledevice-glue
 "
 DEPEND="${RDEPEND}"
 BDEPEND="
 	virtual/pkgconfig
 "
 
-S="${WORKDIR}/${PN}-${COMMIT}"
-
 src_prepare() {
 	default
-	echo -n "${TARBALL_VERSION}" > "${S}/.tarball-version"
+	echo ${PV}-${MY_COMMIT} > "${S}"/.tarball-version
 	eautoreconf
 }
 
 src_configure() {
 	econf \
-		$(use_enable static-libs static) \
+		--disable-static \
 		$(usex kernel_linux '' --without-inotify)
 }
 
