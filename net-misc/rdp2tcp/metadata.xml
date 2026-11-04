@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>pavel.procopiuc@alloptions.nl</email>
+	</maintainer>
+	<use>
+		<flag name="python">Install the rdp2tcp.py tunnel management tool</flag>
+		<flag name="server">Cross-compile the Windows server (rdp2tcp.exe, win32 and win64) with <pkg>dev-util/mingw64-toolchain</pkg></flag>
+	</use>
+	<upstream>
+		<remote-id type="github">v-e-o/rdp2tcp</remote-id>
+	</upstream>
+</pkgmetadata>
