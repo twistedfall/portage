@@ -30,6 +30,7 @@ PATCHES=(
 	"${FILESDIR}/no-werror.patch"
 	"${FILESDIR}/include-cassert.patch"
 	"${FILESDIR}/int-cast.patch"
+	"${FILESDIR}/${P}-boost.patch"
 )
 
 src_configure() {
