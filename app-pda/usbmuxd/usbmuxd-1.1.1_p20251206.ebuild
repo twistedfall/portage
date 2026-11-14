@@ -1,16 +1,16 @@
-# Copyright 1999-2023 Gentoo Authors
+# Copyright 1999-2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-COMMIT="bc0b91ca856811f4393318dc83db6dc3c1ac326d"
-TARBALL_VERSION="${PV}-56-g${COMMIT:0:7}"
-
 inherit autotools systemd udev
+
+MY_COMMIT=3ded00c9985a5108cfc7591a309f9a23d57a8cba
 
 DESCRIPTION="USB multiplex daemon for use with Apple iPhone/iPod Touch devices"
 HOMEPAGE="https://libimobiledevice.org/"
-SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${COMMIT}.zip -> ${P}.zip"
+SRC_URI="https://github.com/libimobiledevice/${PN}/archive/${MY_COMMIT}.tar.gz -> ${P}.tar.gz"
+S="${WORKDIR}/${PN}-${MY_COMMIT}"
 
 # src/utils.h is LGPL-2.1+, rest is found in COPYING*
 LICENSE="|| ( GPL-2 GPL-3 ) LGPL-2.1+"
@@ -19,34 +19,29 @@ KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~x86"
 IUSE="selinux systemd"
 
 DEPEND="
-	acct-user/usbmux
-	app-pda/libimobiledevice-glue
 	>=app-pda/libimobiledevice-1.3.0:=
-	>=app-pda/libplist-2.3:=
-	virtual/libusb:1=
+	>=app-pda/libimobiledevice-glue-1.0.0:=
+	>=app-pda/libplist-2.6:=
+	>=dev-libs/libusb-1.0.9:1
 "
-
 RDEPEND="
 	${DEPEND}
+	acct-user/usbmux
 	virtual/udev
 	selinux? ( sec-policy/selinux-usbmuxd )
 	systemd? ( sys-apps/systemd )
 "
-
-BDEPEND="
-	virtual/pkgconfig
-"
-
-S="${WORKDIR}/${PN}-${COMMIT}"
+BDEPEND="virtual/pkgconfig"
 
 src_prepare() {
 	default
-	echo -n "${TARBALL_VERSION}" > "${S}/.tarball-version"
+	printf '%s\n' "${PV%_p*}-git-${MY_COMMIT}" > .tarball-version || die
 	eautoreconf
 }
 
 src_configure() {
 	econf \
+		--with-preflight \
 		"$(use_with systemd)" \
 		--with-systemdsystemunitdir="$(systemd_get_systemunitdir)" \
 		--with-udevrulesdir="$(get_udevdir)"/rules.d

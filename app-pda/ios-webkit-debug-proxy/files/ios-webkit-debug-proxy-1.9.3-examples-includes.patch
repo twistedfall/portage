@@ -1,0 +1,14 @@
+The examples also compile sources that include the public proxy headers.
+Include their subdirectory, as the main src build already does.
+
+--- a/examples/Makefile.am
++++ b/examples/Makefile.am
+@@ -1,7 +1,7 @@
+ # Google BSD license https://developers.google.com/google-bsd-license
+ # Copyright 2012 Google Inc. wrightt@google.com
+ 
+-AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/src
++AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/include/ios-webkit-debug-proxy -I$(top_srcdir)/src
+ 
+ AM_CFLAGS = $(GLOBAL_CFLAGS) $(libimobiledevice_CFLAGS) $(libplist_CFLAGS) $(libusbmuxd_CFLAGS) $(openssl_CFLAGS)
+ AM_LDFLAGS = $(libimobiledevice_LIBS) $(libplist_LIBS) $(libusbmuxd_LIBS) $(openssl_LIBS)
