@@ -1,0 +1,242 @@
+From 5464b12c3bb7516e29ab502cdfb49762ffde0352 Mon Sep 17 00:00:00 2001
+From: Pro <twisted.fall@gmail.com>
+Date: Thu, 19 Nov 2026 19:58:46 +0100
+Subject: [PATCH] [channels,rdp2tcp] interrupt helper reads during shutdown
+
+Wait for shutdown or readable stdout on POSIX. On Windows, cancel the pending overlapped read when shutdown starts. Join the worker before freeing channel state.
+
+Treat hangups as readable in WinPR waits so a closed pipe delivers EOF, and cover this in the anonymous pipe test.
+---
+ channels/rdp2tcp/client/rdp2tcp_main.c        | 105 ++++++++++++++++--
+ winpr/libwinpr/pipe/test/TestPipeCreatePipe.c |  14 ++-
+ winpr/libwinpr/synch/pollset.c                |   7 +-
+ 3 files changed, 117 insertions(+), 9 deletions(-)
+
+diff --git a/channels/rdp2tcp/client/rdp2tcp_main.c b/channels/rdp2tcp/client/rdp2tcp_main.c
+index 65cdc776e..25896bf1b 100644
+--- a/channels/rdp2tcp/client/rdp2tcp_main.c
++++ b/channels/rdp2tcp/client/rdp2tcp_main.c
+@@ -22,8 +22,13 @@
+ 
+ #include <winpr/file.h>
+ #include <winpr/pipe.h>
++#include <winpr/synch.h>
+ #include <winpr/thread.h>
+ 
++#ifdef _WIN32
++#include <winpr/crypto.h>
++#endif
++
+ #include <freerdp/freerdp.h>
+ #include <freerdp/svc.h>
+ #include <freerdp/channels/rdp2tcp.h>
+@@ -39,16 +44,60 @@ typedef struct
+ 	HANDLE hStdInputWrite;
+ 	HANDLE hProcess;
+ 	HANDLE copyThread;
++#ifdef _WIN32
++	HANDLE readComplete;
++#endif
+ 	HANDLE writeComplete;
+ 	HANDLE writeTerminated;
+ 	DWORD openHandle;
+ 	void* initHandle;
+ 	CHANNEL_ENTRY_POINTS_FREERDP_EX channelEntryPoints;
+-	char buffer[16 * 1024];
+ 	char* commandline;
+ 	UINT32 totalLength;
+ } Plugin;
+ 
++static BOOL create_stdout_pipe(HANDLE* readPipe, HANDLE* writePipe, SECURITY_ATTRIBUTES* attributes)
++{
++#ifdef _WIN32
++	/* The helper inherits a synchronous write handle. FreeRDP needs an overlapped read handle,
++	 * which CreatePipe does not provide on Windows. */
++	UINT64 random[2] = { 0 };
++	if (winpr_RAND(random, sizeof(random)) < 0)
++		return FALSE;
++
++	char name[64] = { 0 };
++	const int len =
++	    snprintf(name, sizeof(name), "\\\\.\\pipe\\freerdp-rdp2tcp-%016" PRIx64 "%016" PRIx64,
++	             random[0], random[1]);
++	if ((len < 0) || ((size_t)len >= sizeof(name)))
++		return FALSE;
++
++	DWORD mode = PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT;
++#if _WIN32_WINNT >= 0x0600
++	mode |= PIPE_REJECT_REMOTE_CLIENTS;
++#endif
++	HANDLE reader = CreateNamedPipeA(
++	    name, PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED | FILE_FLAG_FIRST_PIPE_INSTANCE, mode, 1,
++	    0, 0, 0, nullptr);
++	if (reader == INVALID_HANDLE_VALUE)
++		return FALSE;
++
++	HANDLE writer = CreateFileA(name, GENERIC_WRITE, 0, attributes, OPEN_EXISTING,
++	                            FILE_ATTRIBUTE_NORMAL, nullptr);
++	if (writer == INVALID_HANDLE_VALUE)
++	{
++		(void)CloseHandle(reader);
++		return FALSE;
++	}
++
++	*readPipe = reader;
++	*writePipe = writer;
++	return TRUE;
++#else
++	return CreatePipe(readPipe, writePipe, attributes, 0);
++#endif
++}
++
+ static int init_external_addin(Plugin* plugin)
+ {
+ 	int rc = -1;
+@@ -66,9 +115,9 @@ static int init_external_addin(Plugin* plugin)
+ 	siStartInfo.dwFlags = STARTF_USESTDHANDLES;
+ 
+ 	// Create pipes
+-	if (!CreatePipe(&plugin->hStdOutputRead, &siStartInfo.hStdOutput, &saAttr, 0))
++	if (!create_stdout_pipe(&plugin->hStdOutputRead, &siStartInfo.hStdOutput, &saAttr))
+ 	{
+-		WLog_ERR(TAG, "stdout CreatePipe");
++		WLog_ERR(TAG, "Failed to create helper stdout pipe");
+ 		goto fail;
+ 	}
+ 
+@@ -78,6 +127,15 @@ static int init_external_addin(Plugin* plugin)
+ 		goto fail;
+ 	}
+ 
++#ifdef _WIN32
++	plugin->readComplete = CreateEvent(nullptr, TRUE, FALSE, nullptr);
++	if (!plugin->readComplete)
++	{
++		WLog_ERR(TAG, "Failed to create helper stdout read event");
++		goto fail;
++	}
++#endif
++
+ 	if (!CreatePipe(&siStartInfo.hStdInput, &plugin->hStdInputWrite, &saAttr, 0))
+ 	{
+ 		WLog_ERR(TAG, "stdin CreatePipe");
+@@ -125,11 +183,42 @@ fail:
+ 	return rc;
+ }
+ 
++static BOOL read_helper_stdout(Plugin* plugin, void* buffer, DWORD size, DWORD* bytesRead)
++{
++#ifdef _WIN32
++	if (WaitForSingleObject(plugin->writeTerminated, 0) != WAIT_TIMEOUT)
++		return FALSE;
++
++	OVERLAPPED read = { .hEvent = plugin->readComplete };
++	if (ReadFile(plugin->hStdOutputRead, buffer, size, bytesRead, &read))
++		return GetOverlappedResult(plugin->hStdOutputRead, &read, bytesRead, FALSE);
++	if (GetLastError() != ERROR_IO_PENDING)
++		return FALSE;
++
++	const HANDLE handles[] = { plugin->writeTerminated, plugin->readComplete };
++	if (WaitForMultipleObjects(ARRAYSIZE(handles), handles, FALSE, INFINITE) == WAIT_OBJECT_0 + 1)
++		return GetOverlappedResult(plugin->hStdOutputRead, &read, bytesRead, FALSE);
++
++	/* This thread owns the only pending read. Keep its buffer and OVERLAPPED alive until
++	 * cancellation completes. */
++	(void)CancelIo(plugin->hStdOutputRead);
++	(void)GetOverlappedResult(plugin->hStdOutputRead, &read, bytesRead, TRUE);
++	return FALSE;
++#else
++	/* WinPR can wait on the pipe's read descriptor alongside the shutdown event. */
++	const HANDLE handles[] = { plugin->writeTerminated, plugin->hStdOutputRead };
++	if (WaitForMultipleObjects(ARRAYSIZE(handles), handles, FALSE, INFINITE) != WAIT_OBJECT_0 + 1)
++		return FALSE;
++
++	return ReadFile(plugin->hStdOutputRead, buffer, size, bytesRead, nullptr);
++#endif
++}
++
+ static DWORD WINAPI copyThread(void* data)
+ {
+ 	DWORD status = WAIT_OBJECT_0;
+ 	Plugin* plugin = (Plugin*)data;
+-	size_t const bufsize = 16ULL * 1024ULL;
++	const DWORD bufsize = 16 * 1024;
+ 
+ 	WINPR_ASSERT(plugin);
+ 
+@@ -146,9 +235,7 @@ static DWORD WINAPI copyThread(void* data)
+ 			goto fail;
+ 		}
+ 
+-		// if (!ReadFile(plugin->hStdOutputRead, plugin->buffer, sizeof plugin->buffer, &dwRead,
+-		// nullptr))
+-		if (!ReadFile(plugin->hStdOutputRead, buffer, bufsize, &dwRead, nullptr))
++		if (!read_helper_stdout(plugin, buffer, bufsize, &dwRead) || (dwRead == 0))
+ 		{
+ 			free(buffer);
+ 			goto fail;
+@@ -248,6 +335,10 @@ static void channel_terminated(Plugin* plugin)
+ 		(void)CloseHandle(plugin->writeComplete);
+ 	if (plugin->writeTerminated)
+ 		(void)CloseHandle(plugin->writeTerminated);
++#ifdef _WIN32
++	if (plugin->readComplete)
++		(void)CloseHandle(plugin->readComplete);
++#endif
+ 
+ 	(void)CloseHandle(plugin->hStdInputWrite);
+ 	(void)CloseHandle(plugin->hStdOutputRead);
+diff --git a/winpr/libwinpr/pipe/test/TestPipeCreatePipe.c b/winpr/libwinpr/pipe/test/TestPipeCreatePipe.c
+index 9580bfb54..04a8bab67 100644
+--- a/winpr/libwinpr/pipe/test/TestPipeCreatePipe.c
++++ b/winpr/libwinpr/pipe/test/TestPipeCreatePipe.c
+@@ -2,6 +2,7 @@
+ #include <stdio.h>
+ #include <winpr/crt.h>
+ #include <winpr/pipe.h>
++#include <winpr/synch.h>
+ #include <winpr/tchar.h>
+ #include <winpr/winpr.h>
+ 
+@@ -65,8 +66,19 @@ int TestPipeCreatePipe(int argc, char* argv[])
+ 		return -1;
+ 	}
+ 
+-	(void)CloseHandle(hReadPipe);
+ 	(void)CloseHandle(hWritePipe);
+ 
++#ifndef _WIN32
++	/* WinPR supports waiting on the read end of an anonymous pipe, including at EOF. */
++	const DWORD wait = WaitForMultipleObjects(1, &hReadPipe, FALSE, 1000);
++	if (wait != WAIT_OBJECT_0)
++	{
++		(void)CloseHandle(hReadPipe);
++		_tprintf(_T("Pipe read handle did not signal at EOF: %") _T(PRIu32) _T("\n"), wait);
++		return -1;
++	}
++#endif
++
++	(void)CloseHandle(hReadPipe);
+ 	return 0;
+ }
+diff --git a/winpr/libwinpr/synch/pollset.c b/winpr/libwinpr/synch/pollset.c
+index d3033786c..25a0dfe55 100644
+--- a/winpr/libwinpr/synch/pollset.c
++++ b/winpr/libwinpr/synch/pollset.c
+@@ -235,7 +235,12 @@ BOOL pollset_isSignaled(WINPR_POLL_SET* set, size_t idx)
+ 	}
+ 
+ #ifdef WINPR_HAVE_POLL_H
+-	return !!(set->pollset[idx].revents & set->pollset[idx].events);
++	const struct pollfd* fd = &set->pollset[idx];
++	/* A read after a hangup can return EOF immediately, as with select(). */
++	if ((fd->events & POLLIN) && (fd->revents & POLLHUP))
++		return TRUE;
++
++	return (fd->revents & fd->events) != 0;
+ #else
+ 	FdIndex* fdIndex = &set->fdIndex[idx];
+ 	if (fdIndex->fd < 0)
+-- 
+2.56.1
+

@@ -113,6 +113,8 @@ RDEPEND="${COMMON_DEPEND}
 	smartcard? ( app-crypt/p11-kit )
 "
 
+PATCHES=( "${FILESDIR}/${P}-rdp2tcp-shutdown.patch" )
+
 option() {
 	usex "$1" ON OFF
 }
